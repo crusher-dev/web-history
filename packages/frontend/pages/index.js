@@ -29,7 +29,8 @@ export default function Home() {
             showWebsiteHistory ? (
                 <div css={css`margin-top: 4rem; width: 100%; `}>
                     <div css={sliderCss}>
-                      <iframe src="https://web.archive.org/web/20020124144701/http://www.google.com/" css={css`width: 100%; height: calc(100vh - 2rem); border:none; border-radius: 0.5rem;`}/>
+                      <img src="/scr.png" alt="Screenshot of the website" css={css`width: 100%; padding: 1rem 1rem; border-radius: 1.5rem;`}/>
+                      {/* <iframe src="https://web.archive.org/web/20020124144701/http://www.google.com/" css={css`width: 100%; height: calc(100vh - 2rem); border:none; border-radius: 0.5rem;`}/> */}
                     </div>
                 </div>
             ): (
