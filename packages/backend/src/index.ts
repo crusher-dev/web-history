@@ -12,6 +12,11 @@ app.get('/', (req, res) => {
     res.send('Hello World!' + test("HELLO"))
 });
 
+app.get('/cluster', async (req, res) => {
+    await crawner.cluster("stripe.com");
+    res.send(JSON.stringify({status: "success"}));
+});
+
 app.get("/trigger", async (req, res) => {
     const { website } = req.query as any;
     const records = await crawner.start(website);
