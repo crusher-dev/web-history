@@ -2,6 +2,8 @@
   "name": "frontend",
   "version": "1.0.0",
   "scripts": {
+    "crusher": "npx crusher.dev",
+    "crusher:run": "npx crusher.dev test:run",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -14,6 +16,7 @@
     "@radix-ui/react-checkbox": "^1.0.0",
     "@radix-ui/react-icons": "^1.1.1",
     "@stitches/react": "^1.2.8",
+    "crusher.dev": "^0.5.5",
     "esbuild": "^0.15.2",
     "gray-matter": "^4.0.3",
     "mdx-bundler": "^9.0.1",
