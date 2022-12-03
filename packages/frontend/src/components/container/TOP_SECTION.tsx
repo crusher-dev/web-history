@@ -42,12 +42,12 @@ const TOP_SECTION = ():JSX.Element => {
                <BLUR_LAYER/>
                 <div css={[CONTAINER_1234_24]}>
                     <div id="menu" className="realtive flex items-center justify-between pt-24 relative">
-                        <div className="font-source font-800 text-14" css={css` color: #CBCBCB;`}>
+                        <div id="logo" className="font-source font-800 text-14" css={css` color: #CBCBCB;`}>
                             website history
                         </div>
 
                         <div className="relative" css={inputContainer}>
-                            <input placeholder="search website" css={inputCSS} className="text-12"/>
+                            <input id="search" placeholder="search website" css={inputCSS} className="text-12"/>
                         </div>
 
                         <div className="flex items-center" css={css`gap: 24px; color: #CBCBCB; letter-spacing: -0.04em;`}>
