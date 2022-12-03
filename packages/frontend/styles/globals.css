@@ -8,21 +8,23 @@ html {
 }
 
 html {
-	font-size: 1.05px;
+	font-size: 1px;
 	padding: 0;
 	margin: 0;
-	font-family: "Gilroy";
-
+	font-family: 'Source Code Pro', monospace;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 }
 
 body {
-	font-size: 16rem;
-	background: red;
+	font-size: 14rem;
+	background: #050708;
 	overflow-x: hidden;
 	min-width: 100vw;
+	color: white;
+	background: #050708;
 }
+
 
 a {
 	color: inherit;
@@ -46,37 +48,11 @@ a {
 	/* Internet Explorer/Edge */
 	user-select: none;
 	/* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+   supported by Chrome, Edge, Opera and Firefox */
 }
 
-@media (prefers-color-scheme: dark) {
-	html {
-		color-scheme: dark;
-	}
 
-	body {
-		color: white;
-		background: #0c0c0d;
-	}
-}
 
-@media only screen and (max-width: 1520px) {
-	html {
-		font-size: calc(100vw / 1546);
-	}
-}
-
-@media only screen and (max-width: 1400px) {
-	html {
-		font-size: 0.85px;
-	}
-}
-
-@media only screen and (max-width: 800px) {
-	html {
-		font-size: 1px;
-	}
-}
 
 @font-face {
 	font-family: "Cera Pro";
@@ -162,68 +138,7 @@ a {
 	font-style: italic;
 }
 
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-Regular.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-}
 
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-RegularItalic.woff2") format("woff2");
-	font-weight: 400;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-Medium.woff2") format("woff2");
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-MediumItalic.woff2") format("woff2");
-	font-weight: 500;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-SemiBold.woff2") format("woff2");
-	font-weight: 600;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-SemiBoldItalic.woff2") format("woff2");
-	font-weight: 600;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-Bold.woff2") format("woff2");
-	font-weight: 700;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2") format("woff2");
-	font-weight: 800;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "Gilroy";
-	src: url("/assets/fonts/Gilroy/Gilroy-Black.woff2") format("woff2");
-	font-weight: 900;
-	font-style: normal;
-}
 
 h1,
 h2,
@@ -286,4 +201,8 @@ article pre {
 
 * {
 	transition: all 50ms ease 0s;
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }

@@ -2,17 +2,14 @@ import { css } from "@emotion/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import HOME_SCREEN from "../src/screens/home";
+import TOP_SECTION from "../components/container/TOP_SECTION";
 
-const Home: NextPage = () => {
+const HOME_SCREEN: NextPage = () => {
 	return (
 		<React.Fragment>
-			<Head>
-				<title>Web History - By Crusher</title>
-			</Head>
-			<HOME_SCREEN/>
+            <TOP_SECTION/>
 		</React.Fragment>
 	);
 };
 
-export default Home;
+export default HOME_SCREEN;

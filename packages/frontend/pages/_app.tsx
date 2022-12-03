@@ -8,8 +8,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
         <Head>
           <title>Web History</title>
+          <style  dangerouslySetInnerHTML = { { 
+        __html: `html{ font-size: 1px;}`
+        } } />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <link href="/favicon.png" rel="shortcut icon" type="image/x-icon"></link>
+          <link href="https://crusher.dev/assets/website/resources/icon.png" rel="shortcut icon" type="image/x-icon"></link>
+
+          <link rel="preconnect" href="https://fonts.googleapis.com"/>
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}/>
+          <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></link>
         </Head>
         <Component {...pageProps} />
       </>

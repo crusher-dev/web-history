@@ -8,7 +8,7 @@ const getSpacingSizes = () => {
 };
 
 const FONTS = {
-	gilroy: ["Gilroy", "sans-serif"],
+	source: ["Source Code Pro", "sans-serif"],
 	cera: ["Cera Pro", "sans-serif"],
 };
 
@@ -21,11 +21,6 @@ const FONT_WEIGHT_VALUE = {
 	900: "900",
 };
 
-const LINE_HEIGHT_VALUE = {
-	28: "1.57rem",
-	16: "1rem",
-	NORMAL: "1.33",
-};
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -36,7 +31,13 @@ module.exports = {
 		extend: {
 			margin: getSpacingSizes(),
 			padding: getSpacingSizes(),
+			fontSize: getSpacingSizes()
 		},
+		screens: {
+			'xl': {'max': '1279px'},
+			'md': {'max': '767px'},
+			'sm': {'max': '639px'},
+		  }
 	},
 	plugins: [],
 };
