@@ -15,6 +15,7 @@ const BLUR_LAYER = () => {
 const layerCSS = css`
 	position: absolute;
 	width: 100%;
+    top: -12px;
 	height: 201px;
 
 	background: url("/img/stripe.png");
@@ -62,7 +63,7 @@ const MENU = () => {
 				<a className="text-13">examples</a>
 				<a className="text-13">how it works</a>
 				<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
-					track my website
+					track site
 				</div>
 			</div>
 		</div>
@@ -71,7 +72,7 @@ const MENU = () => {
 
 const MiddleBar = () => {
 	return (
-		<div className="flex mt-52 w-full justify-between">
+		<div className="flex mt-52 mb-36 w-full justify-between">
 			<div>
 				<div className="flex items-center">
 					<div className="flex items-center mr-20">
@@ -86,9 +87,8 @@ const MiddleBar = () => {
 							color: #41bbff;
 						`}
 					>
-						all-in-one
-					</span>{" "}
-					testing framework, with magical low-code
+						all-in-one testing
+					</span>{" "}framework, with magical low-code
 				</div>
 			</div>
 
@@ -99,9 +99,11 @@ const MiddleBar = () => {
 				`}
 			>
 				<div
+                    className="mt-6"
 					css={css`
 						min-height: 25.5px;
 						min-width: 100px;
+                        margin-right: -18px;
 					`}
 				>
 					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub">

@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	return (
     <>
         <Head>
-          <title>Web History</title>
+          <title>Website history</title>
           <style  dangerouslySetInnerHTML = { { 
         __html: `html{ font-size: 1px;}`
         } } />

@@ -8,7 +8,7 @@ const Home: NextPage = () => {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Web History - By Crusher</title>
+				<title>Website history - By Crusher</title>
 			</Head>
 			<HOME_SCREEN/>
 		</React.Fragment>

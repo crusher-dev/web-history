@@ -18,11 +18,11 @@ html {
 
 body {
 	font-size: 14rem;
-	background: #050708;
+
 	overflow-x: hidden;
 	min-width: 100vw;
 	color: white;
-	background: #050708;
+	background: #090909;
 }
 
 
@@ -146,7 +146,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: Cera Pro;
+
 	font-weight: 900;
 	color: #e0e0e0;
 	margin-top: 16rem;
