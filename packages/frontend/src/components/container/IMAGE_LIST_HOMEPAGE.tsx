@@ -53,7 +53,7 @@ const ImageCarousel = ()=>{
 					<div  css={cardCSS}>
 						<img src="/img/stripe.png"/>
 						<div className="flex justify-between mt-16">
-						<span className="font-700">
+						<span className="font-700 card-label">
 							stripe.com >
 						</span>
 						<span>
@@ -79,6 +79,9 @@ img{
 img{
 	//transform: translateY(-3px);
 	transform: rotate(-2deg);
+}
+.card-label{
+	color: #5081FF;
 }
 }
 `
