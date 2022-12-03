@@ -7,7 +7,7 @@ import TOP_SECTION from "../components/container/TOP_SECTION";
 const HOME_SCREEN: NextPage = () => {
 	return (
 		<React.Fragment>
-            <TOP_SECTION/>
+			<TOP_SECTION />
 		</React.Fragment>
 	);
 };

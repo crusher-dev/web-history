@@ -4,6 +4,7 @@ const getSpacingSizes = () => {
 
 	sizingMap["12.8"] = `12.8rem`;
 	sizingMap["12.5"] = `12.5rem`;
+	sizingMap["13.5"] = `13.5rem`;
 	return sizingMap;
 };
 
