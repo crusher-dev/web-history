@@ -21,7 +21,11 @@ const FONT_WEIGHT_VALUE = {
 	800: "800",
 	900: "900",
 };
-
+const LINE_HEIGHT = {
+	none: "none",
+	1.7: "1.7",
+	2: "2",
+};
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -32,13 +36,15 @@ module.exports = {
 		extend: {
 			margin: getSpacingSizes(),
 			padding: getSpacingSizes(),
-			fontSize: getSpacingSizes()
+			fontSize: getSpacingSizes(),
+			lineHeight: LINE_HEIGHT,
 		},
 		screens: {
-			'xl': {'max': '1279px'},
-			'md': {'max': '767px'},
-			'sm': {'max': '639px'},
-		  }
+			xl: { max: "1279px" },
+			tab: { max: "980px" },
+			md: { max: "767px" },
+			sm: { max: "639px" },
+		},
 	},
 	plugins: [],
 };

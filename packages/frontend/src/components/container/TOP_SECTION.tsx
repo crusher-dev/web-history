@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 
 import React from "react";
 import { CONTAINER_1234_24 } from "../../constants/style";
-import { GithubIcon, Logo } from "../../constants/svg";
+import { GithubIcon, Logo, SearchIcon } from "../../constants/svg";
 
 const BLUR_LAYER = () => {
 	return (
@@ -15,7 +15,7 @@ const BLUR_LAYER = () => {
 const layerCSS = css`
 	position: absolute;
 	width: 100%;
-    top: -12px;
+	top: -12px;
 	height: 201px;
 
 	background: url("/img/stripe.png");
@@ -35,21 +35,44 @@ const layerCSS = css`
 	}
 `;
 
+const menuCSS = css`
+
+  @media screen and (max-width: 880px){
+    display: grid;
+    grid-template-areas: 
+    'logo'
+    'search'
+    'menu';
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto);
+    grid-row-gap: 4px;
+
+`;
+
 const MENU = () => {
 	return (
-		<div id="menu" className="realtive flex items-center justify-between pt-24 relative">
+		<div id="menu" className="realtive flex items-center justify-between pt-24 relative" css={menuCSS}>
 			<div
 				id="logo"
 				className="font-source font-800 text-14"
 				css={css`
-					color: #cbcbcb;
+					color: #fff;
+					grid-area: logo;
 				`}
 			>
 				website history
 			</div>
 
 			<div className="relative" css={inputContainer}>
-				<input id="search" placeholder="search website" css={inputCSS} className="text-12" />
+				<input id="search" placeholder="search website" css={inputCSS} className="text-12" autoComplete="off" />
+				<SearchIcon
+					className="absolute"
+					css={css`
+						top: 50%;
+						transform: translateY(-50%);
+						right: 16px;
+					`}
+				/>
 			</div>
 
 			<div
@@ -58,6 +81,9 @@ const MENU = () => {
 					gap: 24px;
 					color: #cbcbcb;
 					letter-spacing: -0.04em;
+					@media screen and (max-width: 650px) {
+						grid-area: menu;
+					}
 				`}
 			>
 				<a className="text-13">examples</a>
@@ -71,39 +97,75 @@ const MENU = () => {
 };
 
 const MiddleBar = () => {
+	const mobileLabel = (
+		<React.Fragment>
+			fast{" "}
+			<span
+				css={css`
+					color: rgba(160, 255, 65, 1);
+				`}
+			>
+				all-in-one testing
+			</span>
+			, with low-code
+		</React.Fragment>
+	);
+
+	const desktopLabel = (
+		<React.Fragment>
+			: fast{" "}
+			<span
+				css={css`
+					color: #41bbff;
+				`}
+			>
+				all-in-one testing
+			</span>{" "}
+			framework, with magical low-code
+		</React.Fragment>
+	);
 	return (
-		<div className="flex mt-52 mb-36 w-full justify-between">
+		<div className="flex mt-52 mb-36 md:mb-20 w-full justify-between md:flex-col">
 			<div>
 				<div className="flex items-center">
 					<div className="flex items-center mr-20">
-						{" "}
-						<span className="mr-12">by</span> <Logo />{" "}
+						<span className="mr-12">by</span> <Logo />
 					</div>
 				</div>
-				<div className="mt-16 text-13.5">
-					: fast{" "}
-					<span
-						css={css`
-							color: #41bbff;
-						`}
-					>
-						all-in-one testing
-					</span>{" "}framework, with magical low-code
+				<div
+					className="mt-16 text-13.5 md:mt-8 md:text-12.5 md:leading-2"
+					css={css`
+						@media screen and (max-width: 680px) {
+							display: none;
+						}
+					`}
+				>
+					{desktopLabel}
+				</div>
+				<div
+					className="mt-16 text-13.5 md:mt-8 md:text-12.5 md:leading-2"
+					css={css`
+						@media screen and (min-width: 680px) {
+							display: none;
+						}
+					`}
+				>
+					{mobileLabel}
 				</div>
 			</div>
 
 			<div
-				className="flex items-center"
+				className="flex items-center md:mt-8"
 				css={css`
 					gap: 20px;
 				`}
 			>
 				<div
-                    className="mt-6"
+					className="mt-6"
 					css={css`
 						min-height: 25.5px;
 						min-width: 100px;
-                        margin-right: -18px;
+						margin-right: -18px;
 					`}
 				>
 					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub">
@@ -124,7 +186,12 @@ const TOP_SECTION = (): JSX.Element => {
 	return (
 		<div className={"relative"}>
 			<BLUR_LAYER />
-			<div css={[CONTAINER_1234_24]}>
+			<div
+				css={[
+					CONTAINER_1234_24,
+					// css`background: black; padding-bottom: 20px;`
+				]}
+			>
 				<MENU />
 				<MiddleBar />
 			</div>
@@ -133,10 +200,21 @@ const TOP_SECTION = (): JSX.Element => {
 };
 
 const inputContainer = css`
-	position: absolute !important;
+	position: absolute;
 	left: 50%;
-	// -40px to offset CSS
 	transform: translateX(calc(-50% - 40px));
+
+	grid-area: search;
+	@media screen and (max-width: 880px) {
+		position: relative !important;
+		grid-area: search;
+		left: 0% !important;
+		transform: none;
+		margin-top: 12px;
+		margin-bottom: 4px;
+		width: 100%;
+		max-width: 400px;
+	}
 `;
 const inputCSS = css`
 	background: rgba(255, 255, 255, 0.02);
@@ -149,6 +227,11 @@ const inputCSS = css`
 
 	:focus {
 		border-color: rgba(71, 71, 71);
+	}
+
+	@media screen and (max-width: 880px) {
+		width: 100%;
+		min-height: 38px;
 	}
 `;
 

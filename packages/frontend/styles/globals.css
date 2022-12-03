@@ -2,29 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-body,
-html {
-	position: fixed;
-}
-
 html {
 	font-size: 1px;
 	padding: 0;
 	margin: 0;
-	font-family: 'Source Code Pro', monospace;
+	font-family: "Source Code Pro", monospace;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 }
 
 body {
 	font-size: 14rem;
-
-	overflow-x: hidden;
 	min-width: 100vw;
 	color: white;
+	overflow: scroll;
 	background: #090909;
 }
-
 
 a {
 	color: inherit;
@@ -50,9 +43,6 @@ a {
 	/* Non-prefixed version, currently
    supported by Chrome, Edge, Opera and Firefox */
 }
-
-
-
 
 @font-face {
 	font-family: "Cera Pro";
@@ -138,15 +128,12 @@ a {
 	font-style: italic;
 }
 
-
-
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-
 	font-weight: 900;
 	color: #e0e0e0;
 	margin-top: 16rem;
@@ -203,6 +190,7 @@ article pre {
 	transition: all 50ms ease 0s;
 }
 
-textarea:focus, input:focus{
-    outline: none;
+textarea:focus,
+input:focus {
+	outline: none;
 }

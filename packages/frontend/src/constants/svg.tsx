@@ -37,3 +37,16 @@ export function GithubIcon(props) {
 		</svg>
 	);
 }
+
+export function SearchIcon(props) {
+	return (
+		<svg width={12} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M5.577 1.95a3.85 3.85 0 100 7.7 3.85 3.85 0 000-7.7zM.677 5.8a4.9 4.9 0 118.717 3.074l2.33 2.33a.525.525 0 11-.743.742l-2.33-2.33A4.9 4.9 0 01.677 5.8z"
+				fill="#7B7B7B"
+			/>
+		</svg>
+	);
+}

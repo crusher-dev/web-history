@@ -32,25 +32,24 @@ const IMAGE_LIST_HOMEPAGE = () => {
 	return (
 		
 		<div css={CONTAINER_1234_24}>
-			<div className="pt-40" css={css`color: #CBCBCB;`}>
-				<h1 className="text-18 font-900 leading-none">go back in past to see the evolution</h1>
-				<div className="text-13.5 font-400 mt-16" >You have to look at history as an evolution of society</div>
+			<div className="pt-40 md:pt-24" css={css`color: #CBCBCB;`}>
+			
+				<h1 className="text-16 mt-0 mb-0 font-900 leading-none md:text-16 md:leading-1.7">go in past to see the evolution</h1> 
+				<div className="text-13 font-400 mt-8 text-12 md:leading-1.7 md:mt-4" >You have to look at history as an evolution of society</div>
+				<div className="mt-12 text-11">see list by: alphabet/type</div>
 			</div>
 
-			<ImageCarousel/>
-
+			<ImageCarousel className={"mt-80 md:mt-40 mb-80"}/>
+			<ImageCarousel className={"mt-48 md:mt-32"}/>
 		</div>
 	
 	);
 };
 
 
-const ImageCarousel = ()=>{
+const Card = ()=>{
 	return (
-		<div css={carouselCSS}>
-				<h1 className="mt-48 text-14 font-600 leading-none mb-28">top website</h1>
-				<div className="flex">
-					<div  css={cardCSS}>
+		<div  css={cardCSS}>
 						<img src="/img/stripe.png"/>
 						<div className="flex justify-between mt-16">
 						<span className="font-700 card-label">
@@ -61,6 +60,18 @@ const ImageCarousel = ()=>{
 						</span>
 						</div>
 					</div>
+	)
+}
+const ImageCarousel = ({className})=>{
+	return (
+		<div css={carouselCSS} className={className}>
+				<h1 className=" text-14 font-600 leading-none mb-28">top website</h1>
+				<div className="flex flex-wrap justify-between md:justify-start" css={css`gap: 20px; @media screen and (max-width: 680px){
+					gap: 40px;
+				}`}>
+					{["","","",""].map(()=>{
+						return 	<Card/>
+					})}
 				</div>
 
 		</div>
@@ -74,15 +85,25 @@ img{
 	border: 1px solid #202020;
 	border-radius: 17px;
 	object-fit: cover;
+	filter: opacity(0.8);
+
+	@media screen and (max-width: 680px){
+		height: auto;
+		width: 100%;
+		aspect-ratio: 16/11;
+
+	}
 }
+cursor: pointer;
 :hover{
-img{
-	//transform: translateY(-3px);
-	transform: rotate(-2deg);
-}
-.card-label{
-	color: #5081FF;
-}
+	img{
+		//transform: translateY(-3px);
+		transform: rotate(-0.5deg);
+		filter: opacity(.9);
+	}
+	.card-label{
+		color: #5081FF;
+	}
 }
 `
 

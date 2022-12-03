@@ -10,7 +10,7 @@ const Home: NextPage = () => {
 			<Head>
 				<title>Website history - By Crusher</title>
 			</Head>
-			<HOME_SCREEN/>
+			<HOME_SCREEN />
 		</React.Fragment>
 	);
 };
