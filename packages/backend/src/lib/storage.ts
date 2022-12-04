@@ -16,12 +16,15 @@ export class Storage {
             bucketId: BACKBLAZE_CONFIG.bucket,
         });
 
-        await this.backBlazeInstance.uploadFile({
+        const out =await this.backBlazeInstance.uploadFile({
             uploadUrl,
             uploadAuthToken: authorizationToken,
             fileName,
             data: buffer,
         });
+
+        console.log("Upload result", out);
+        
     }
 
     static async get(fileName: string): Promise<Buffer> {

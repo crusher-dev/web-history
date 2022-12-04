@@ -7,7 +7,7 @@ import pixelmatch from "pixelmatch";
 
 // promisify
 import { promisify } from "util";
-import { clusteriseImages, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
+import { clusteriseImages, convertPngToWebp, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
 import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord } from "./webArchive";
 import { Storage } from "./storage";
 import { WebHistoryDB } from "./db";
@@ -28,7 +28,7 @@ export class Crawler {
         const diffPercentage = await getDiffPercentage(leftScreenshot, rightScreenshot);
 
         console.log("Diff percentage", diffPercentage);
-        return { value: diffPercentage > 25 };
+        return { value: diffPercentage > 0 };
     }
 
     async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}, _previousOutput: Buffer | null = null) {
@@ -60,12 +60,12 @@ export class Crawler {
         const webSiteUrl = new URL(this.website);
         const directory = webSiteUrl.hostname;
         console.log("Saving screenshot", i);
-        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.png`;
-        await Storage.upload(screenshot, filename);
+        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.webp`;
+        await Storage.upload(await convertPngToWebp(screenshot), filename);
 
         const thumbnail = await resizeImageToThumbnail(screenshot);
-        const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.png`;
-        await Storage.upload(thumbnail, thumbnailUrl);
+        const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.webp`;
+        await Storage.upload(await convertPngToWebp(thumbnail), thumbnailUrl);
 
         // Get date from yyyyMMdd
         const date = new Date(parseInt(this.webArchiveRecords[i].timestamp.slice(0, 4)), parseInt(this.webArchiveRecords[i].timestamp.slice(4, 6)), parseInt(this.webArchiveRecords[i].timestamp.slice(6, 8)));
