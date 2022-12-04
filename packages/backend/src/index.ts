@@ -3,7 +3,19 @@ import { Crawler } from "./lib/crawler";
 
 import fs from "fs";
 import { getWebArchiveRecords } from "./lib/webArchive";
+import { Queue } from "bullmq";
+import Redis from "ioredis";
 const app = express()
+
+const redisClient = new Redis({
+    port: parseInt(process.env.REDIS_PORT || "6379"),
+    host: process.env.REDIS_HOST || "localhost",
+    password: process.env.REDIS_PASSWORD || "",
+});
+
+const workHistoryQueue = new Queue("web-history", {
+    connection: redisClient,
+});
 
 function test(x: string) {
     return x + "_output";
@@ -46,7 +58,6 @@ app.get('/list', async (req, res) => {
 app.get("/get", async (req, res) => {
     try {
     const { website } = req.query as any;
-    console.log("Website is", website);
     const websiteURL = new URL(website);
     if(fs.existsSync(`out/${websiteURL.hostname}`)) {
         const files = fs.readdirSync(`./out/${websiteURL.hostname}`);
@@ -60,9 +71,10 @@ app.get("/get", async (req, res) => {
         return res.status(200).json(imagesRes);
     }
 
-    const crawler = new Crawler(website);
-    const records = await crawler.start(website);
-    return  res.status(200).send(JSON.stringify({ status: "started", records: records }));  
+    await workHistoryQueue.add("web-history", {
+        website,
+    });
+    return  res.status(200).send(JSON.stringify({ status: "started" }));  
 } catch(e) {
     console.log(e);
     return res.status(500).send(JSON.stringify({ error: e.message }));
