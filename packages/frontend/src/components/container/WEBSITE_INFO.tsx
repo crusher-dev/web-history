@@ -4,8 +4,9 @@ import React from "react";
 import { CONTAINER_1234_24 } from "../../constants/style";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ZoomIcon } from "../../constants/svg";
+import { Button } from "../common/Button";
 import { atom, useAtom } from "jotai";
 
 const zoomAtom = atom(false);
@@ -29,6 +30,34 @@ export const SmallCard = () => {
 };
 
 const ZOOM_MODE = ({ isVisible, setZoom }) => {
+	useEffect(() => {
+		const handleScroll = (e) => {
+			const { keyCode } = e;
+
+			const scrollBox = document.querySelector("#scroll-box");
+			const currentImage = document.querySelector("#current-image");
+
+			if (keyCode === 37) {
+				scrollBox.scrollTo({
+					left: scrollBox.scrollLeft - currentImage.offsetWidth,
+					behavior: "smooth",
+				});
+			}
+			if (keyCode === 39) {
+				scrollBox.scrollTo({
+					left: scrollBox.scrollLeft + currentImage.offsetWidth,
+					behavior: "smooth",
+				});
+			}
+		};
+		document.addEventListener("keydown", handleScroll);
+		document.body.style.overflow = "hidden";
+
+		return () => {
+			document.body.style.overflow = "normal";
+			document.removeEventListener("keydown", handleScroll);
+		};
+	}, []);
 	return (
 		<AnimatePresence>
 			{isVisible && (
@@ -39,6 +68,7 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 					css={isVisible ? overlayCSS : null}
 					className={"flex items-center"}
 					onClick={setZoom.bind(this, false)}
+					id="scroll-box"
 				>
 					<>
 						<motion.img
@@ -47,6 +77,7 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
 							exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
 							css={centerImage}
+							id="current-image"
 						/>
 
 						<motion.img
@@ -74,7 +105,6 @@ const leftImage = css`
 	border-radius: 29px;
 	width: 775px;
 	height: 465px;
-	object-fit: cover;
 	border: 10px solid rgba(255, 255, 255, 0.1);
 `;
 const centerImage = css`
@@ -99,6 +129,7 @@ const overlayCSS = css`
 `;
 export const WEBSITE_INFO = (): JSX.Element => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
+
 	return (
 		<div css={[CONTAINER_1234_24]}>
 			<div className="flex justify-between pt-40 md:pt-24">
@@ -112,8 +143,16 @@ export const WEBSITE_INFO = (): JSX.Element => {
 
 					<div className="text-13 font-400 mt-8 text-12 md:leading-1.7 md:mt-2">for navigating use updated 12 times</div>
 				</div>
-				<div className="flex items-center cursor-pointer md:hidden" onClick={setZoom.bind(this, true)}>
-					<ZoomIcon height={16} width={16} className="mr-6 mt-2" /> zoom
+				<div
+					className="flex items-center"
+					css={css`
+						gap: 20px;
+					`}
+				>
+					<div className="flex items-start cursor-pointer md:hidden" onClick={setZoom.bind(this, true)} css={zoomBox}>
+						<ZoomIcon height={16} width={16} className="mr-6 mt-2" /> zoom
+					</div>
+					<Button>share</Button>
 				</div>
 			</div>
 
@@ -130,8 +169,24 @@ export const WEBSITE_INFO = (): JSX.Element => {
 	);
 };
 
+const zoomBox = css`
+	color: #a0a0a0;
+	svg path {
+		fill: #a0a0a0;
+	}
+	:hover {
+		cursor: pointer;
+		color: #fff;
+		text-decoration: underline;
+		svg path {
+			fill: #fff;
+		}
+	}
+`;
+
 export const WEBSITE_FULL_VIEW = () => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
+
 	return (
 		<div className="mt-64 md:hidden">
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />

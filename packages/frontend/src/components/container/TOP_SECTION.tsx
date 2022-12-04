@@ -174,7 +174,10 @@ const MiddleBar = () => {
 			<div>
 				<div className="flex items-center">
 					<div className="flex items-center mr-20">
-						<span className="mr-12">by</span> <Logo />
+						<span className="mr-12">by</span>
+						<a href="https://crusher.dev">
+							<Logo alt="Crusher logo" />
+						</a>
 					</div>
 				</div>
 				<div
@@ -211,17 +214,28 @@ const MiddleBar = () => {
 						min-height: 25.5px;
 						min-width: 130px;
 						margin-right: -18px;
-						zoom: .85;
+						zoom: 0.85;
 					`}
 				>
-					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub" data-icon="octicon-star" data-size="large">
+					<a
+						class="github-button"
+						href="https://github.com/crusherdev/crusher"
+						data-show-count="true"
+						aria-label="Star crusherdev/crusher on GitHub"
+						data-icon="octicon-star"
+						data-size="large"
+					>
 						Star
 					</a>
 				</div>
-				<GithubIcon />
-				<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
-					demo
-				</div>
+				<a href="https://github.com/crusher-dev/crusher" target="_blank">
+					<GithubIcon alt="Crusher codebase" />
+				</a>
+				<a href="" target="_blank">
+					<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
+						demo
+					</div>
+				</a>
 			</div>
 			<script async defer src="https://buttons.github.io/buttons.js"></script>
 		</div>
