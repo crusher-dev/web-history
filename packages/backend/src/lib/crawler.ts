@@ -94,7 +94,7 @@ export class Crawler {
     }
 
     async start() {
-        this.browser = await playwright.chromium.launch({headless: false});
+        this.browser = await playwright.chromium.launch({headless: true});
         this.browserContext = await this.browser.newContext({
             viewport: {
                 width: 1920,
