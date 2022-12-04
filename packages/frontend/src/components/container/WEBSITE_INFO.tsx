@@ -133,7 +133,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 export const WEBSITE_FULL_VIEW = () => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
 	return (
-		<div className="mt-64">
+		<div className="mt-64 md:hidden">
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
 			<motion.img src="/img/stripe.png" initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
