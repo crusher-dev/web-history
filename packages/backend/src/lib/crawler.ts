@@ -9,6 +9,8 @@ import pixelmatch from "pixelmatch";
 import { promisify } from "util";
 import { clusteriseImages, getDiffPercentage, httpsRequest, processImages } from "../utils";
 import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord } from "./webArchive";
+import { Storage } from "./storage";
+import { WebHistoryDB } from "./db";
 
 export class Crawler {
     browser: Browser | null = null;
@@ -19,13 +21,14 @@ export class Crawler {
     constructor(private website: string){
 
     }
+    
 
     async isNewScreenshot(leftScreenshot: Buffer, rightScreenshot: Buffer) {
         if(!rightScreenshot) return { value: 100 };
         const diffPercentage = await getDiffPercentage(leftScreenshot, rightScreenshot);
 
         console.log("Diff percentage", diffPercentage);
-        return { value: diffPercentage > 25 };
+        return { value: diffPercentage > 0 };
     }
 
     async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}, _previousOutput: Buffer | null = null) {
@@ -56,13 +59,23 @@ export class Crawler {
     async saveScreenshot(screenshot: Buffer, i: number) {
         const webSiteUrl = new URL(this.website);
         const directory = webSiteUrl.hostname;
-        console.log("Directory is", directory);
-        if(!fs.existsSync(`./out/${directory}`)) {
-            fs.mkdirSync(`./out/${directory}`);
-        }
-        // not thread-safe
-        const filename = `./out/${directory}/${this.webArchiveRecords[i].timestamp}.png`;
-        await promisify(fs.writeFile)(filename, screenshot);
+        console.log("Saving screenshot", i);
+        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.png`;
+        await Storage.upload(screenshot, filename);
+
+        // Get date from yyyyMMdd
+        const date = new Date(parseInt(this.webArchiveRecords[i].timestamp.slice(0, 4)), parseInt(this.webArchiveRecords[i].timestamp.slice(4, 6)), parseInt(this.webArchiveRecords[i].timestamp.slice(6, 8)));
+
+        const siteRecord = await WebHistoryDB.getSiteRecord(webSiteUrl.hostname);
+        const siteId = siteRecord?.data?.[0]?.id;
+ 
+        const out = await WebHistoryDB.insertSnapshotRecord({
+            site_id: siteId,
+            timestamp: date as any,
+            screenshot_url: filename,
+            wa_url:  `https://web.archive.org/web/${this.webArchiveRecords[i].timestamp}/${this.website}`
+        });
+        console.log("Inserted snapshot record", out);
     }
 
     async takeScreenshots(records: Array<IWebArchiveRecord>, directory: string, limit: number = 1, parallel = 2) {
@@ -73,10 +86,10 @@ export class Crawler {
         // K-means clustering of screenshots
     }
 
-    async start(website: string) {
+    async start() {
         this.browser = await playwright.chromium.launch({headless: false});
-        this.webArchiveRecords = await getWebArchiveRecords(website);
-        const directory = new URL(website).hostname;
+        this.webArchiveRecords = await getWebArchiveRecords(this.website);
+        const directory = new URL(this.website).hostname;
         await this.takeScreenshots(this.webArchiveRecords, directory, this.webArchiveRecords.length);
         await this.browser.close();
 

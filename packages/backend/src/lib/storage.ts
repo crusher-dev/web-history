@@ -7,6 +7,10 @@ export class Storage {
         applicationKey: BACKBLAZE_CONFIG.applicationKey,
     });
 
+    static async initialize() {
+        await this.backBlazeInstance.authorize();
+    }
+
     static async upload(buffer: Buffer, fileName: string): Promise<void> {
         const { data: { uploadUrl, authorizationToken } } = await Storage.backBlazeInstance.getUploadUrl({
             bucketId: BACKBLAZE_CONFIG.bucket,

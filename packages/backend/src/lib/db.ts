@@ -27,7 +27,7 @@ export class WebHistoryDB {
         return this.client.from("sites").delete().eq("url", url);
     }
 
-    static async insertSnapshotRecord (payload: ISnapshotRecord & { site: number; }): Promise<any> {
+    static async insertSnapshotRecord (payload: ISnapshotRecord & { site_id: number; }): Promise<any> {
         return this.client.from("snapshots").insert(payload);
     }
 
@@ -50,11 +50,11 @@ export class WebHistoryDB {
 
 export interface ISiteRecord {
     url: string;
-    category: "social" | "news" | "shopping" | "entertainment" | "other" | null;
+    category?: "social" | "news" | "shopping" | "entertainment" | "other" | null;
 }
 
 export interface ISnapshotRecord  {
-    site: ISiteRecord;
+    site?: ISiteRecord;
     screenshot_url: string;
     wa_url: string;
     timestamp: number;
