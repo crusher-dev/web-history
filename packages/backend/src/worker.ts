@@ -4,13 +4,13 @@ import { Crawler } from "./lib/crawler";
 import { WebHistoryDB } from "./lib/db";
 import { Storage } from "./lib/storage";
 import {  Worker } from "bullmq";
+import { REDIS_CONFIG } from "./config";
 
 const redisClient = new Redis({
-    port: parseInt(process.env.REDIS_PORT || "6379"),
-    host: process.env.REDIS_HOST || "localhost",
-    password: process.env.REDIS_PASSWORD || "",
+    port: REDIS_CONFIG.port,
+    host: REDIS_CONFIG.host,
+    password: REDIS_CONFIG.password,
 });
-
 
 (async() => {
     await Storage.initialize();

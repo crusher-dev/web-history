@@ -23,8 +23,7 @@ export class Storage {
             data: buffer,
         });
 
-        console.log("Upload result", out);
-        
+            
     }
 
     static async get(fileName: string): Promise<Buffer> {
@@ -38,6 +37,6 @@ export class Storage {
     }
 
     static async getUrl (fileName: string): Promise<string> {
-        return `https://f004.backblazeb2.com/file/${BACKBLAZE_CONFIG.bucket}/${fileName}`;
+        return `https://f004.backblazeb2.com/file/${BACKBLAZE_CONFIG.bucketName}/${fileName}`;
     }
 }

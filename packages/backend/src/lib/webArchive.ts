@@ -1,4 +1,4 @@
-import { Browser } from "playwright";
+import { Browser, BrowserContext } from "playwright";
 import { httpsRequest } from "../utils";
 
 export interface IWebArchiveRecord {
@@ -61,22 +61,13 @@ async function getWebArchiveRecords(website: string): Promise<Array<IWebArchiveR
 
 const cache: any = {};
 
-async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser): Promise<{fullPageScreenshot: Buffer; viewPortScreenshot: Buffer;} | null> {
+async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser, browserContext: BrowserContext): Promise<{fullPageScreenshot: Buffer; viewPortScreenshot: Buffer;} | null> {
     console.time(`${record.timestamp}_screenshot`);
     try {
         if(cache[record.timestamp]) {         console.timeEnd(`${record.timestamp}_screenshot`);
         return cache[record.timestamp]; }
 
-        const page = await browser.newPage({
-            viewport: {
-                width: 1920,
-                height: 1080
-            },
-            screen: {
-                width: 1920,
-                height: 1080
-            }
-        });
+        const page = await browserContext.newPage();
         // Load wa_url in iframe
         const pageRes =await page.goto(record.wa_url, {timeout: 60 * 1000});
         // Make sure status is not greater than 404
@@ -100,6 +91,7 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
         cache[record.timestamp] = res;
         console.timeEnd(`${record.timestamp}_screenshot`);
 
+        await page.close();
         return { fullPageScreenshot, viewPortScreenshot: res };
     } catch(err) {
         console.log(err);

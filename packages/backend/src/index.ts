@@ -5,12 +5,15 @@ import fs from "fs";
 import { getWebArchiveRecords } from "./lib/webArchive";
 import { Queue } from "bullmq";
 import Redis from "ioredis";
+import { ISnapshotRecord, WebHistoryDB } from "./lib/db";
+import { Storage } from "./lib/storage";
+import { REDIS_CONFIG } from "./config";
 const app = express()
 
 const redisClient = new Redis({
-    port: parseInt(process.env.REDIS_PORT || "6379"),
-    host: process.env.REDIS_HOST || "localhost",
-    password: process.env.REDIS_PASSWORD || "",
+    port: REDIS_CONFIG.port,
+    host: REDIS_CONFIG.host,
+    password: REDIS_CONFIG.password,
 });
 
 const workHistoryQueue = new Queue("web-history", {
@@ -59,16 +62,18 @@ app.get("/get", async (req, res) => {
     try {
     const { website } = req.query as any;
     const websiteURL = new URL(website);
-    if(fs.existsSync(`out/${websiteURL.hostname}`)) {
-        const files = fs.readdirSync(`./out/${websiteURL.hostname}`);
-        const imagesRes = files.map((file) => {
+
+    const siteSnapshots = await WebHistoryDB.getSiteSnapshots(websiteURL.hostname);
+    if(siteSnapshots !== null) {
+        const out = await Promise.all(siteSnapshots.map(async (snapshot: ISnapshotRecord) => {
             return {
-                url: `http://localhost:3031/out/${websiteURL.hostname}/${file}`,
-                wa_url: `https://web.archive.org/web/${file.replace(".png", "")}/${websiteURL.hostname}`,
-                timestamp: file.split(".")[0]
+                screenshot_url: await Storage.getUrl(snapshot.screenshot_url),
+                thumbnail_url: await Storage.getUrl(snapshot.thumbnail_url),
+                timestamp: snapshot.timestamp,
+                wa_url: snapshot.wa_url,
             }
-        });
-        return res.status(200).json(imagesRes);
+        }));
+        return res.status(200).send(out);
     }
 
     await workHistoryQueue.add("web-history", {
