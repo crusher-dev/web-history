@@ -9,9 +9,8 @@ const HOME_SCREEN: NextPage = () => {
 	return (
 		<React.Fragment>
 			<TOP_SECTION />
-		
-            <IMAGE_LIST_HOMEPAGE />
 
+			<IMAGE_LIST_HOMEPAGE />
 		</React.Fragment>
 	);
 };

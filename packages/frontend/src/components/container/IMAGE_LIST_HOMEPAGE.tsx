@@ -30,7 +30,7 @@ const Card = ()=>{
 			scale: 1.01,
 			transition: { duration: .15},
 		  }}>
-						<img src="/img/stripe.png"/>
+						<img src="/img/stripe.png" css={css`object-fit: cover`}/>
 						<div className="flex justify-between mt-16">
 						<span className="font-700 card-label">
 							stripe.com >

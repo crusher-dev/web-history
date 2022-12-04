@@ -50,14 +50,19 @@ const menuCSS = css`
 
 `;
 
-export const INPUT = ()=>{
-	const [showBar, setShow] = useState(false)
+export const INPUT = () => {
+	const [showBar, setShow] = useState(false);
 	return (
 		<div className="relative" css={inputContainer}>
-			<input 
-			onBlur={setShow.bind(this,false)}
-			onFocus={setShow.bind(this,true)}
-			id="search" placeholder="search website" css={inputCSS} className="text-12" autoComplete="off" />
+			<input
+				onBlur={setShow.bind(this, false)}
+				onFocus={setShow.bind(this, true)}
+				id="search"
+				placeholder="search website"
+				css={inputCSS}
+				className="text-12"
+				autoComplete="off"
+			/>
 			<SearchIcon
 				className="absolute"
 				css={css`
@@ -67,46 +72,37 @@ export const INPUT = ()=>{
 				`}
 			/>
 			{showBar && (
-			<div className="absolute flex flex-col" css={suggestionBoxCSS}>
-			<div className="items text-13">
-				Search for google.com
-			</div>
-			<div className="items text-13">
-				Search for google.com
-			</div>
-			<div className="items text-13">
-				Search for google.com
-			</div>
-			<div className="items text-13">
-				Search for google.com
-			</div>
-		</div>
+				<div className="absolute flex flex-col" css={suggestionBoxCSS}>
+					<div className="items text-12.5">Search for google.com</div>
+					<div className="items text-12.5">Search for google.com</div>
+					<div className="items text-12.5">Search for google.com</div>
+					<div className="items text-12.5">Search for google.com</div>
+				</div>
 			)}
-
-	</div>
-	)
-}
+		</div>
+	);
+};
 
 const suggestionBoxCSS = css`
 	background: rgb(13 12 12 / 60%);
 	backdrop-filter: blur(6px);
-    border-radius: 8px;
-    border: 0.5px solid rgba(106, 106, 106, 0.2);
-    padding: 8px 10px;
+	border-radius: 8px;
+	border: 0.5px solid rgba(106, 106, 106, 0.2);
+	padding: 12px 10px;
 	width: 100%;
 	top: calc(110% + 8px);
 
 	gap: 5px;
 
-	.items{
+	.items {
 		padding: 4px 6px;
 		cursor: pointer;
 		border-radius: 6px;
-		:hover{
+		:hover {
 			background: rgba(255, 255, 255, 0.1);
 		}
 	}
-`
+`;
 
 const MENU = () => {
 	return (
@@ -122,7 +118,7 @@ const MENU = () => {
 				website history
 			</div>
 
-<INPUT/>
+			<INPUT />
 
 			<div
 				className="flex items-center"
