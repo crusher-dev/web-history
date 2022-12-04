@@ -118,7 +118,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 			</div>
 
 			<div
-				className="mt-36 md:mt-32 flex"
+				className="mt-36 md:mt-32 flex md:flex-col-reverse md:pb-40"
 				css={css`
 					gap: 32px;
 				`}
@@ -147,6 +147,11 @@ const imageCSS = css`
 	border: 1.5px solid #bbbbbb;
 	border-radius: 10px;
 	object-fit: cover;
+
+	@media screen and (max-width: 680px) {
+		width: 400px;
+		height: 203px;
+	}
 `;
 
 export default WEBSITE_INFO;
