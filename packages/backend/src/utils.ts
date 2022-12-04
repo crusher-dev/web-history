@@ -2,6 +2,8 @@ import path from "path";
 import https from "https";
 import Pixelmatch from "pixelmatch";
 import {PNG} from "pngjs";
+import sharp from "sharp";
+
 var clustering = require('density-clustering');
 
 const getOutputDirectory = (url: URL) => {
@@ -74,6 +76,10 @@ async function clusteriseImages(images: Array<Buffer>): Promise<Array<Array<numb
     var clusters = dbscan.run(imagePixelsArr, 15, 1);
     console.log("Clusters are", clusters);
     return clusters;
+}
+
+export async function resizeImageToThumbnail(image: Buffer): Promise<Buffer> {
+    return sharp(image).resize(400, 250, { fit: "cover" }).toBuffer();
 }
 
 export { getOutputDirectory, httpsRequest, clusteriseImages, processImages, getDiffPercentage };
