@@ -61,7 +61,7 @@ async function getWebArchiveRecords(website: string): Promise<Array<IWebArchiveR
 
 const cache: any = {};
 
-async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser): Promise<Buffer | null> {
+async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser): Promise<{fullPageScreenshot: Buffer; viewPortScreenshot: Buffer;} | null> {
     console.time(`${record.timestamp}_screenshot`);
     try {
         if(cache[record.timestamp]) {         console.timeEnd(`${record.timestamp}_screenshot`);
@@ -96,10 +96,11 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
         
         // Take full page screenshot
         const res = page.screenshot({ animations: "disabled", clip: { x:0, y:0, width: 1920, height: 1080 } });
+        const fullPageScreenshot  = await page.screenshot({ animations: "disabled", fullPage: true });
         cache[record.timestamp] = res;
         console.timeEnd(`${record.timestamp}_screenshot`);
 
-        return res;
+        return { fullPageScreenshot, viewPortScreenshot: res };
     } catch(err) {
         console.log(err);
         console.timeEnd(`${record.timestamp}_screenshot`);

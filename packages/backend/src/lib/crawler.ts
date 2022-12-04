@@ -39,19 +39,19 @@ export class Crawler {
         const mid = Math.floor((left + right) / 2);
         const [leftScreenshot, rightScreenshot] = await Promise.all([getWebArchiveScreenshot(records[left], this.browser!),  getWebArchiveScreenshot(records[right], this.browser!)]);
 
-        const isDiff = await this.isNewScreenshot(leftScreenshot!, rightScreenshot!);
+        const isDiff = await this.isNewScreenshot(leftScreenshot?.viewPortScreenshot!, rightScreenshot?.viewPortScreenshot!);
         if(isDiff.value) {
             if(!outputs[left]) {
                 outputs[left] = leftScreenshot;
-                await this.saveScreenshot(leftScreenshot!, left);
+                await this.saveScreenshot(leftScreenshot?.fullPageScreenshot!, left);
             }
             if(!outputs[right]) {
                 outputs[right] = rightScreenshot;
-                await this.saveScreenshot(rightScreenshot!, right);
+                await this.saveScreenshot(rightScreenshot?.fullPageScreenshot!, right);
             }
 
-            await this.getUniqueWebArchiveRecords(left, mid, records, outputs, leftScreenshot);
-            await this.getUniqueWebArchiveRecords(mid + 1, right, records, outputs, rightScreenshot);
+            await this.getUniqueWebArchiveRecords(left, mid, records, outputs, leftScreenshot?.viewPortScreenshot);
+            await this.getUniqueWebArchiveRecords(mid + 1, right, records, outputs, rightScreenshot?.viewPortScreenshot);
         }
 
     }
