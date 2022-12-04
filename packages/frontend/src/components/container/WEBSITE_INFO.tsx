@@ -5,7 +5,7 @@ import { CONTAINER_1234_24 } from "../../constants/style";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ZoomIcon } from "../../constants/svg";
+import { Arrow, ZoomIcon } from "../../constants/svg";
 import { Button } from "../common/Button";
 import { atom, useAtom } from "jotai";
 
@@ -51,13 +51,16 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 			}
 		};
 		document.addEventListener("keydown", handleScroll);
-		document.body.style.overflow = "hidden";
 
 		return () => {
 			document.body.style.overflow = "normal";
 			document.removeEventListener("keydown", handleScroll);
 		};
 	}, []);
+
+	useEffect(() => {
+		document.body.style.overflow = isVisible ? "hidden" : "normal";
+	}, [isVisible]);
 	return (
 		<AnimatePresence>
 			{isVisible && (
@@ -95,8 +98,17 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 							css={isVisible ? leftImage : null}
 						/>
 					</>
+					<div className="flex" css={css`position: fixed; bottom: 20px;`}>
+					<span className="mr-8">for navigating use </span>
+						<div className="flex" css={css`gap: 8px;`}>
+							<Arrow/>
+							<Arrow css={css`transform: rotate(180deg);`}/>
+						</div>
+					</div>
 				</motion.div>
 			)}
+		
+
 		</AnimatePresence>
 	);
 };
@@ -132,7 +144,9 @@ export const WEBSITE_INFO = (): JSX.Element => {
 
 	return (
 		<div css={[CONTAINER_1234_24]}>
-			<div className="flex justify-between pt-40 md:pt-24">
+			<div className="flex justify-between pt-40 md:pt-24 md:flex-col md:mb-20" css={css`@media screen and (max-width: 680px){
+				gap: 20px;
+			}`}>
 				<div
 					className=""
 					css={css`
@@ -141,15 +155,24 @@ export const WEBSITE_INFO = (): JSX.Element => {
 				>
 					<h1 className="text-16 mt-0 mb-0 font-900 leading-none md:text-16 md:leading-1.7">stripe.com design history</h1>
 
-					<div className="text-13 font-400 mt-8 text-12 md:leading-1.7 md:mt-2">for navigating use updated 12 times</div>
+					<div className="flex items-center text-13 font-400 mt-6 text-12 md:leading-1.7 md:mt-2">
+						<span className="mr-8">for navigating use </span>
+						<div className="flex" css={css`gap: 8px;`}>
+							<Arrow/>
+							<Arrow css={css`transform: rotate(180deg);`}/>
+						</div>
+					
+						<span className="ml-16">updated 12 times</span>
+					</div>
 				</div>
 				<div
 					className="flex items-center"
 					css={css`
 						gap: 20px;
+						align-self: flex-start;
 					`}
 				>
-					<div className="flex items-start cursor-pointer md:hidden" onClick={setZoom.bind(this, true)} css={zoomBox}>
+					<div className="flex items-start cursor-pointer md:hidden leading-1" onClick={setZoom.bind(this, true)} css={zoomBox}>
 						<ZoomIcon height={16} width={16} className="mr-6 mt-2" /> zoom
 					</div>
 					<Button>share</Button>
@@ -171,6 +194,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 
 const zoomBox = css`
 	color: #a0a0a0;
+	line-height: 1.2;
 	svg path {
 		fill: #a0a0a0;
 	}

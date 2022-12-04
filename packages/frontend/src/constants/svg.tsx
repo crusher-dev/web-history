@@ -71,3 +71,29 @@ export function ZoomIcon(props: React.HTMLProps<SVGElement>) {
     );
   }
   
+
+  export function Arrow(props) {
+	return (
+	  <svg
+		width={22}
+		height={25}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M17 .865H5a5 5 0 00-5 5v12a5 5 0 005 5h12a5 5 0 005-5v-12a5 5 0 00-5-5z"
+		  fill="#171717"
+		/>
+		<path
+		  d="M12.275 7.826a.679.679 0 01.956 0 .672.672 0 010 .953l-3.03 3.017 3.03 3.016a.672.672 0 010 .953.679.679 0 01-.957 0l-3.497-3.483a.67.67 0 01.003-.975l3.495-3.48z"
+		  fill="#9E9EA7"
+		/>
+		<path
+		  d="M17 1.365H5a4.5 4.5 0 00-4.5 4.5v12a4.5 4.5 0 004.5 4.5h12a4.5 4.5 0 004.5-4.5v-12a4.5 4.5 0 00-4.5-4.5z"
+		  stroke="#323232"
+		/>
+	  </svg>
+	);
+  }
+  
