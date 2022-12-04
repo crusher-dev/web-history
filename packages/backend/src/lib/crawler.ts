@@ -43,11 +43,11 @@ export class Crawler {
         if(isDiff.value) {
             if(!outputs[left]) {
                 outputs[left] = leftScreenshot;
-                await this.saveScreenshot(leftScreenshot?.fullPageScreenshot!, left);
+                await this.saveScreenshot(leftScreenshot?.fullPageScreenshot!, leftScreenshot?.viewPortScreenshot!, left);
             }
             if(!outputs[right]) {
                 outputs[right] = rightScreenshot;
-                await this.saveScreenshot(rightScreenshot?.fullPageScreenshot!, right);
+                await this.saveScreenshot(rightScreenshot?.fullPageScreenshot!, rightScreenshot?.viewPortScreenshot!, right);
             }
 
             await this.getUniqueWebArchiveRecords(left, mid, records, outputs, leftScreenshot?.viewPortScreenshot);
@@ -56,14 +56,14 @@ export class Crawler {
 
     }
 
-    async saveScreenshot(screenshot: Buffer, i: number) {
+    async saveScreenshot(screenshot: Buffer, viewportScreenshot: Buffer, i: number) {
         const webSiteUrl = new URL(this.website);
         const directory = webSiteUrl.hostname;
         console.log("Saving screenshot", i);
         const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.webp`;
         await Storage.upload(await convertPngToWebp(screenshot), filename);
 
-        const thumbnail = await resizeImageToThumbnail(screenshot);
+        const thumbnail = await resizeImageToThumbnail(viewportScreenshot);
         const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.webp`;
         await Storage.upload(await convertPngToWebp(thumbnail), thumbnailUrl);
 
