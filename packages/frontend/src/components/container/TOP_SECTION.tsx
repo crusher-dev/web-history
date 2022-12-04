@@ -131,7 +131,7 @@ const MENU = () => {
 					}
 				`}
 			>
-				<a className="text-13">examples</a>
+				<a className="text-13">list</a>
 				<a className="text-13">how it works</a>
 				<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
 					track site
@@ -178,7 +178,7 @@ const MiddleBar = () => {
 					</div>
 				</div>
 				<div
-					className="mt-16 text-13.5 md:mt-8 md:text-12.5 md:leading-2"
+					className="mt-16 text-13.5 md:mt-6 md:text-12.5 md:leading-2"
 					css={css`
 						@media screen and (max-width: 680px) {
 							display: none;
@@ -200,7 +200,7 @@ const MiddleBar = () => {
 			</div>
 
 			<div
-				className="flex items-center md:mt-8"
+				className="flex items-center md:mt-12"
 				css={css`
 					gap: 20px;
 				`}
@@ -209,11 +209,12 @@ const MiddleBar = () => {
 					className="mt-6"
 					css={css`
 						min-height: 25.5px;
-						min-width: 100px;
+						min-width: 130px;
 						margin-right: -18px;
+						zoom: .85;
 					`}
 				>
-					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub">
+					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub" data-icon="octicon-star" data-size="large">
 						Star
 					</a>
 				</div>
@@ -256,7 +257,7 @@ const inputContainer = css`
 		left: 0% !important;
 		transform: none;
 		margin-top: 12px;
-		margin-bottom: 4px;
+		margin-bottom: 8px;
 		width: 100%;
 		max-width: 400px;
 	}
