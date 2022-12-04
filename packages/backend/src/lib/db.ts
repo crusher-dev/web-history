@@ -57,5 +57,6 @@ export interface ISnapshotRecord  {
     site?: ISiteRecord;
     screenshot_url: string;
     wa_url: string;
+    thumbnail_url: string;
     timestamp: number;
 };

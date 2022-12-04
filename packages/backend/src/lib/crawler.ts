@@ -7,7 +7,7 @@ import pixelmatch from "pixelmatch";
 
 // promisify
 import { promisify } from "util";
-import { clusteriseImages, getDiffPercentage, httpsRequest, processImages } from "../utils";
+import { clusteriseImages, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
 import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord } from "./webArchive";
 import { Storage } from "./storage";
 import { WebHistoryDB } from "./db";
@@ -28,7 +28,7 @@ export class Crawler {
         const diffPercentage = await getDiffPercentage(leftScreenshot, rightScreenshot);
 
         console.log("Diff percentage", diffPercentage);
-        return { value: diffPercentage > 0 };
+        return { value: diffPercentage > 25 };
     }
 
     async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}, _previousOutput: Buffer | null = null) {
@@ -63,6 +63,10 @@ export class Crawler {
         const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.png`;
         await Storage.upload(screenshot, filename);
 
+        const thumbnail = await resizeImageToThumbnail(screenshot);
+        const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.png`;
+        await Storage.upload(thumbnail, thumbnailUrl);
+
         // Get date from yyyyMMdd
         const date = new Date(parseInt(this.webArchiveRecords[i].timestamp.slice(0, 4)), parseInt(this.webArchiveRecords[i].timestamp.slice(4, 6)), parseInt(this.webArchiveRecords[i].timestamp.slice(6, 8)));
 
@@ -73,7 +77,8 @@ export class Crawler {
             site_id: siteId,
             timestamp: date as any,
             screenshot_url: filename,
-            wa_url:  `https://web.archive.org/web/${this.webArchiveRecords[i].timestamp}/${this.website}`
+            wa_url:  `https://web.archive.org/web/${this.webArchiveRecords[i].timestamp}/${this.website}`,
+            thumbnail_url: thumbnailUrl,
         });
         console.log("Inserted snapshot record", out);
     }
