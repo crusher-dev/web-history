@@ -1,194 +1,98 @@
+
 import axios, { formToJSON } from "axios";
 import https from "https";
 import playwright, { Browser, firefox } from "playwright";
+import fs from "fs";
+import pixelmatch from "pixelmatch";
 
 // promisify
 import { promisify } from "util";
-
-interface IWebArchiveRecord {
-  urlkey: string;
-  timestamp: string;
-  original: string;
-  mimetype: string;
-  statuscode: string;
-  digest: string;
-  length: string;
-  dupeCount: number;
-  wa_url: string;
-}
+import { clusteriseImages, getDiffPercentage, httpsRequest, processImages } from "../utils";
+import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord } from "./webArchive";
+import { Storage } from "./storage";
+import { WebHistoryDB } from "./db";
 
 export class Crawler {
-  private async getWebArchiveRecords(
-    website: string
-  ): Promise<Array<IWebArchiveRecord>> {
-    const records: string = await new Promise((resolve, reject) => {
-      https
-        .get(
-          `https://web.archive.org/cdx/search/cdx?url=${website}&collapse=timestamp:6&showDupeCount=true&output=json`,
-          (res) => {
-            let data = "";
-            res.on("data", (chunk) => {
-              data += chunk;
-            });
-            res.on("end", () => {
-              resolve(data);
-            });
-          }
-        )
-        .on("error", (err) => {
-          reject(err);
-        });
-    });
+    browser: Browser | null = null;
+    webArchiveRecords: Array<IWebArchiveRecord> = [];
+    cache: any = {};
+    currentIndex: number = 0;
 
-    // console.log(cdx.data.toString());
-    const recordsArr = JSON.parse(records);
-    const recordsKeys = recordsArr[0];
+    constructor(private website: string){
 
-    const recordsData = recordsArr.slice(1).map((record: string[]) => {
-      const result = record.reduce((acc: any, curr, i) => {
-        acc[recordsKeys[i]] = curr;
-        return acc;
-      }, {});
-
-      result[
-        "wa_url"
-      ] = `https://web.archive.org/web/${result.timestamp}/${website}`;
-      return result;
-    });
-
-    return recordsData.filter((record: IWebArchiveRecord) => {
-      // record.original is website
-      const orignalURL = new URL(record.original);
-      return (
-        orignalURL.hostname === new URL(website).hostname &&
-        record.statuscode === "200"
-      );
-    });
-  }
-
-  async takePageScreenshot(
-    record: IWebArchiveRecord,
-    directory: string,
-    browser: Browser
-  ) {
-    try {
-      const page = await browser.newPage();
-      // Load wa_url in iframe
-      const pageRes = await page.goto(record.wa_url, { timeout: 60 * 1000 });
-      // Make sure status is not greater than 404
-      if (pageRes?.status()! > 400) {
-        console.log(`Page ${record.wa_url} not found`);
-        return;
-      }
-      // Remove web.archive.org banner
-      await page.evaluate(() => {
-        const banner = document.querySelector("#wm-ipp-base");
-        if (banner) {
-          banner.remove();
-        }
-      });
-
-      console.log(`Taking screenshot of ${record.wa_url}...`);
-
-      // Take full page screenshot
-      await page.screenshot({
-        animations: "disabled",
-        path: `./screenshots/${directory}/${record.timestamp}.png`,
-        fullPage: true,
-      });
-    } catch (err) {
-      console.log(err);
     }
-  }
+    
 
-  async screenshotBinarySearch(left: number, right: number) {}
+    async isNewScreenshot(leftScreenshot: Buffer, rightScreenshot: Buffer) {
+        if(!rightScreenshot) return { value: 100 };
+        const diffPercentage = await getDiffPercentage(leftScreenshot, rightScreenshot);
 
-  async takeScreenshots(
-    records: Array<IWebArchiveRecord>,
-    directory: string,
-    limit: number = 1,
-    parallel = 2
-  ) {
-    const browser = await playwright.chromium.launch();
-
-    const promises = records.reverse().slice(0, limit);
-
-    for (let i = 0; i < promises.length; i += parallel) {
-      await Promise.all(
-        promises.slice(i, i + parallel).map(async (record) => {
-          await this.takePageScreenshot(record, directory, browser);
-        })
-      );
+        console.log("Diff percentage", diffPercentage);
+        return { value: diffPercentage > 0 };
     }
 
-    // Trigger promises with interval of 1 second
-
-    await Promise.all(promises);
-
-    // K-means clustering of screenshots
-
-    await browser.close();
-  }
-
-  async cluster(directory: string) {
-    const kmeans = require("node-kmeans");
-    const fs = require("fs");
-    const path = require("path");
-    const { promisify } = require("util");
-    const readdir = promisify(fs.readdir);
-    const readFile = promisify(fs.readFile);
-
-    const files = await readdir(`./screenshots/${directory}`);
-    const images = await Promise.all(
-      files.map(async (file) => {
-        const buffer = await readFile(`./screenshots/${directory}/${file}`);
-        return buffer;
-      })
-    );
-
-    const k = 5;
-    await new Promise((resolve, reject) => {
-      // Convert readFile images to float
-      const data = images.map((image) => {
-        return Array.from(image).map((pixel: any) => {
-          return pixel / 255;
-        });
-      });
-      // Add padding to create same size images
-      const max = Math.max(...data.map((image) => image.length));
-      const paddedData = data.map((image) => {
-        const padding = new Array(max - image.length).fill(0);
-        return image.concat(padding);
-      });
-      kmeans.clusterize(paddedData, { k: k }, (err: any, res: any) => {
-        if (err) reject(err);
-        else {
-          // res.forEach((cluster: any, i: number) => {
-          //     cluster.clusterInd.forEach((ind: number) => {
-          //         // Create directory if not exists
-          //         if(!fs.existsSync(`./screenshots/${directory}/cluster${i}/`))
-          //             fs.mkdirSync(`./screenshots/${directory}/cluster${i}/`);
-          //         fs.renameSync(`./screenshots/${directory}/${files[ind]}`,`./screenshots/${directory}/cluster${i}/${files[ind]}`);
-          //     });
-          // });
-          resolve(res);
+    async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}, _previousOutput: Buffer | null = null) {
+        if(left >= right) {
+            return outputs;
         }
-      });
-    }).catch((err) => console.log(err));
-  }
 
-  async start(website: string) {
-    console.log(`Crawling ${website}...`);
-    console.time("crawler");
-    const webArchiveRecords = await this.getWebArchiveRecords(website);
-    const directory = new URL(website).hostname;
-    await this.takeScreenshots(
-      webArchiveRecords,
-      directory,
-      webArchiveRecords.length
-    );
-    console.timeEnd("crawler");
+        const mid = Math.floor((left + right) / 2);
+        const [leftScreenshot, rightScreenshot] = await Promise.all([getWebArchiveScreenshot(records[left], this.browser!),  getWebArchiveScreenshot(records[right], this.browser!)]);
 
-    return webArchiveRecords;
-  }
+        const isDiff = await this.isNewScreenshot(leftScreenshot!, rightScreenshot!);
+        if(isDiff.value) {
+            if(!outputs[left]) {
+                outputs[left] = leftScreenshot;
+                await this.saveScreenshot(leftScreenshot!, left);
+            }
+            if(!outputs[right]) {
+                outputs[right] = rightScreenshot;
+                await this.saveScreenshot(rightScreenshot!, right);
+            }
+
+            await this.getUniqueWebArchiveRecords(left, mid, records, outputs, leftScreenshot);
+            await this.getUniqueWebArchiveRecords(mid + 1, right, records, outputs, rightScreenshot);
+        }
+
+    }
+
+    async saveScreenshot(screenshot: Buffer, i: number) {
+        const webSiteUrl = new URL(this.website);
+        const directory = webSiteUrl.hostname;
+        console.log("Saving screenshot", i);
+        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.png`;
+        await Storage.upload(screenshot, filename);
+
+        // Get date from yyyyMMdd
+        const date = new Date(parseInt(this.webArchiveRecords[i].timestamp.slice(0, 4)), parseInt(this.webArchiveRecords[i].timestamp.slice(4, 6)), parseInt(this.webArchiveRecords[i].timestamp.slice(6, 8)));
+
+        const siteRecord = await WebHistoryDB.getSiteRecord(webSiteUrl.hostname);
+        const siteId = siteRecord?.data?.[0]?.id;
+ 
+        const out = await WebHistoryDB.insertSnapshotRecord({
+            site_id: siteId,
+            timestamp: date as any,
+            screenshot_url: filename,
+            wa_url:  `https://web.archive.org/web/${this.webArchiveRecords[i].timestamp}/${this.website}`
+        });
+        console.log("Inserted snapshot record", out);
+    }
+
+    async takeScreenshots(records: Array<IWebArchiveRecord>, directory: string, limit: number = 1, parallel = 2) {
+       const promises = records.slice(0, limit);
+
+        let outputs: any = {};
+        await this.getUniqueWebArchiveRecords(1, promises.length - 1, promises, outputs);
+        // K-means clustering of screenshots
+    }
+
+    async start() {
+        this.browser = await playwright.chromium.launch({headless: false});
+        this.webArchiveRecords = await getWebArchiveRecords(this.website);
+        const directory = new URL(this.website).hostname;
+        await this.takeScreenshots(this.webArchiveRecords, directory, this.webArchiveRecords.length);
+        await this.browser.close();
+
+        return this.webArchiveRecords;
+    }
 }
