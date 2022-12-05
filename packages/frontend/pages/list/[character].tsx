@@ -3,18 +3,18 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 
-import { WebHistoryDB } from "../src/modules/supabase";
+import { WebHistoryDB } from "../../src/modules/supabase";
 
 import { useHydrateAtoms } from "jotai/utils";
 import SITE_LIST_SCREEN from "../../src/screens/list_sites";
 
-export const pageDataAtom = atom([]);
+export const listDataAtom = atom([]);
 export const selectedInfoAtom = atom({
 	current: 0,
 });
 
-const WebsitePage: NextPage = ({ siteRecord }: any) => {
-	useHydrateAtoms([[pageDataAtom, siteRecord]]);
+const WebsitePage: NextPage = ({ sites }: any) => {
+	useHydrateAtoms([[listDataAtom, sites]]);
 	return (
 		<React.Fragment>
 			<Head>
@@ -26,16 +26,9 @@ const WebsitePage: NextPage = ({ siteRecord }: any) => {
 };
 
 export async function getServerSideProps({ query }) {
-	// const { website } = query;
-	// const res = await WebHistoryDB.getSiteSnapshots(website);
-	// const siteRecord = res?.data || [];
-	// const sortedRecord = siteRecord.sort((x: any, y: any) => {
-	// 	return new Date(x.timestamp) - new Date(y.timestamp);
-	// });
+	const {data} = await WebHistoryDB.getSiteRecords();
 
-	return { props: { 
-		// siteRecord: sortedRecord
-	 } };
+	return { props: { sites: data } };
 }
 
 export default WebsitePage;
