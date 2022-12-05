@@ -3,7 +3,22 @@ import { Crawler } from "./lib/crawler";
 
 import fs from "fs";
 import { getWebArchiveRecords } from "./lib/webArchive";
+import { Queue } from "bullmq";
+import Redis from "ioredis";
+import { ISnapshotRecord, WebHistoryDB } from "./lib/db";
+import { Storage } from "./lib/storage";
+import { REDIS_CONFIG } from "./config";
 const app = express()
+
+const redisClient = new Redis({
+    port: REDIS_CONFIG.port,
+    host: REDIS_CONFIG.host,
+    password: REDIS_CONFIG.password,
+});
+
+const workHistoryQueue = new Queue("web-history", {
+    connection: redisClient,
+});
 
 function test(x: string) {
     return x + "_output";
@@ -46,23 +61,25 @@ app.get('/list', async (req, res) => {
 app.get("/get", async (req, res) => {
     try {
     const { website } = req.query as any;
-    console.log("Website is", website);
     const websiteURL = new URL(website);
-    if(fs.existsSync(`out/${websiteURL.hostname}`)) {
-        const files = fs.readdirSync(`./out/${websiteURL.hostname}`);
-        const imagesRes = files.map((file) => {
+
+    const siteSnapshots = await WebHistoryDB.getSiteSnapshots(websiteURL.hostname);
+    if(siteSnapshots !== null) {
+        const out = await Promise.all(siteSnapshots.map(async (snapshot: ISnapshotRecord) => {
             return {
-                url: `http://localhost:3031/out/${websiteURL.hostname}/${file}`,
-                wa_url: `https://web.archive.org/web/${file.replace(".png", "")}/${websiteURL.hostname}`,
-                timestamp: file.split(".")[0]
+                screenshot_url: await Storage.getUrl(snapshot.screenshot_url),
+                thumbnail_url: await Storage.getUrl(snapshot.thumbnail_url),
+                timestamp: snapshot.timestamp,
+                wa_url: snapshot.wa_url,
             }
-        });
-        return res.status(200).json(imagesRes);
+        }));
+        return res.status(200).send(out);
     }
 
-    const crawler = new Crawler(website);
-    const records = await crawler.start(website);
-    return  res.status(200).send(JSON.stringify({ status: "started", records: records }));  
+    await workHistoryQueue.add("web-history", {
+        website,
+    });
+    return  res.status(200).send(JSON.stringify({ status: "started" }));  
 } catch(e) {
     console.log(e);
     return res.status(500).send(JSON.stringify({ error: e.message }));

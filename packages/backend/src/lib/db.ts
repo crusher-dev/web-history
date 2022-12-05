@@ -39,6 +39,14 @@ export class WebHistoryDB {
         return this.client.from("snapshots").select().eq("id", id);
     }
 
+    static async getSiteSnapshots (siteUrl: string) {
+        const siteRecord = await WebHistoryDB.getSiteRecord(siteUrl);
+        if(!siteRecord.data?.length) return null;
+        const siteId = siteRecord?.data?.[0]?.id;
+        const res = await this.client.from("snapshots").select().eq("site_id", siteId);
+        return res.data;
+    }
+
     static async updateSnapshotRecord (id: number, payload: ISnapshotRecord): Promise<any> {
         return this.client.from("snapshots").update(payload).eq("id", id);
     }

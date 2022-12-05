@@ -62,7 +62,8 @@ async function getDiffPercentage(a: Buffer, b: Buffer): Promise<number> {
         const width = 1920;
         const height = 1080;
         const diff = new PNG({ width, height });
-        const misMatchPixels = Pixelmatch(aImage.data as any, bImage.data as any, diff.data, width, height, { threshold: 0.2 });
+        const misMatchPixels = Pixelmatch(aImage.data as any, bImage.data as any, diff.data, width, height, { 			threshold: 0.15,
+			alpha: 0.8});
         resolve((misMatchPixels * 100)/(width * height));
     });
 }
