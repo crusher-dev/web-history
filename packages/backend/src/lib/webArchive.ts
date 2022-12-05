@@ -89,7 +89,7 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
         // Take full page screenshot
         const res = await page.screenshot({ animations: "disabled", clip: { x:0, y:0, width: 1920, height: 1080 } });
         const fullPageScreenshot  = await page.screenshot({ animations: "disabled", fullPage: true });
-        cache[record.timestamp] = res;
+        cache[record.timestamp] = {fullPageScreenshot, viewPortScreenshot: res};
         console.timeEnd(`${record.timestamp}_screenshot`);
         out = {fullPageScreenshot, viewPortScreenshot: res};
         await page.close();
