@@ -281,6 +281,7 @@ export const WEBSITE_FULL_VIEW = () => {
 			margin-top: 40px;
 			img{
 				border-radius: 20px;
+				border: 4px solid #ffffff4f;
 			}
 		`]}>
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
