@@ -64,6 +64,7 @@ importers:
       '@radix-ui/react-checkbox': ^1.0.0
       '@radix-ui/react-icons': ^1.1.1
       '@stitches/react': ^1.2.8
+      '@supabase/supabase-js': ^2.1.1
       '@types/node': 18.6.5
       '@types/react': 18.0.17
       '@types/react-dom': 18.0.6
@@ -91,6 +92,7 @@ importers:
       '@radix-ui/react-checkbox': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-icons': 1.1.1_react@18.2.0
       '@stitches/react': 1.2.8_react@18.2.0
+      '@supabase/supabase-js': 2.1.1
       crusher.dev: 0.5.5
       esbuild: 0.15.13
       framer-motion: 7.6.18_biqbaboplfbrettd7655fr4n2y

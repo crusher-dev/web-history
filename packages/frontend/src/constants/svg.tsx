@@ -1,4 +1,3 @@
-
 export function Logo(props) {
 	return (
 		<svg width={93} height={21} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -52,48 +51,26 @@ export function SearchIcon(props) {
 	);
 }
 
-
 export function ZoomIcon(props: React.HTMLProps<SVGElement>) {
-    return (
-      <svg
-        width={24}
-        height={24}
-        fill="none"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-      >
-        <path
-          d="M4.5 4.5a3 3 0 00-3 3v9a3 3 0 003 3h8.25a3 3 0 003-3v-9a3 3 0 00-3-3H4.5zm15.44 14.25l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06z"
-          fill="#4A4A4A"
-        />
-      </svg>
-    );
-  }
-  
-
-  export function Arrow(props) {
 	return (
-	  <svg
-		width={22}
-		height={25}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	  >
-		<path
-		  d="M17 .865H5a5 5 0 00-5 5v12a5 5 0 005 5h12a5 5 0 005-5v-12a5 5 0 00-5-5z"
-		  fill="#171717"
-		/>
-		<path
-		  d="M12.275 7.826a.679.679 0 01.956 0 .672.672 0 010 .953l-3.03 3.017 3.03 3.016a.672.672 0 010 .953.679.679 0 01-.957 0l-3.497-3.483a.67.67 0 01.003-.975l3.495-3.48z"
-		  fill="#9E9EA7"
-		/>
-		<path
-		  d="M17 1.365H5a4.5 4.5 0 00-4.5 4.5v12a4.5 4.5 0 004.5 4.5h12a4.5 4.5 0 004.5-4.5v-12a4.5 4.5 0 00-4.5-4.5z"
-		  stroke="#323232"
-		/>
-	  </svg>
+		<svg width={24} height={24} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M4.5 4.5a3 3 0 00-3 3v9a3 3 0 003 3h8.25a3 3 0 003-3v-9a3 3 0 00-3-3H4.5zm15.44 14.25l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06z"
+				fill="#4A4A4A"
+			/>
+		</svg>
 	);
-  }
-  
+}
+
+export function Arrow(props) {
+	return (
+		<svg width={22} height={25} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path d="M17 .865H5a5 5 0 00-5 5v12a5 5 0 005 5h12a5 5 0 005-5v-12a5 5 0 00-5-5z" fill="#171717" />
+			<path
+				d="M12.275 7.826a.679.679 0 01.956 0 .672.672 0 010 .953l-3.03 3.017 3.03 3.016a.672.672 0 010 .953.679.679 0 01-.957 0l-3.497-3.483a.67.67 0 01.003-.975l3.495-3.48z"
+				fill="#9E9EA7"
+			/>
+			<path d="M17 1.365H5a4.5 4.5 0 00-4.5 4.5v12a4.5 4.5 0 004.5 4.5h12a4.5 4.5 0 004.5-4.5v-12a4.5 4.5 0 00-4.5-4.5z" stroke="#323232" />
+		</svg>
+	);
+}

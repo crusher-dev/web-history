@@ -8,10 +8,21 @@ import { useState, useEffect } from "react";
 import { Arrow, ZoomIcon } from "../../constants/svg";
 import { Button } from "../common/Button";
 import { atom, useAtom } from "jotai";
+import { pageDataAtom, selectedInfoAtom } from "../../../pages/[website]";
 
 const zoomAtom = atom(false);
 
-export const SmallCard = () => {
+const getFile = (file_url)=>{
+	return `https://f004.backblazeb2.com/file/web-history/${file_url}`
+}
+
+export const SmallCard = ({instanceInfo,index}) => {
+	const {thumbnail_url} = instanceInfo;
+	const [,selectInstance] = useAtom(selectedInfoAtom)
+
+	const select = ()=>{
+		selectInstance({current: index})
+	}
 	return (
 		<motion.div
 			style={{
@@ -22,8 +33,9 @@ export const SmallCard = () => {
 				opacity: 1,
 				transition: { duration: 0.1 },
 			}}
+			onClick={select.bind(this)}
 		>
-			<img src="img/stripe.png" css={imageCSS} />
+			<img src={getFile(thumbnail_url)} css={imageCSS} />
 			<div className="mt-12 md:mt-12">oct 2020</div>
 		</motion.div>
 	);
@@ -61,6 +73,12 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 	useEffect(() => {
 		document.body.style.overflow = isVisible ? "hidden" : "normal";
 	}, [isVisible]);
+
+	const [data] = useAtom(pageDataAtom)
+	const [,selectInstance] = useAtom(selectedInfoAtom)
+
+
+
 	return (
 		<AnimatePresence>
 			{isVisible && (
@@ -74,16 +92,25 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 					id="scroll-box"
 				>
 					<>
-						<motion.img
-							src="/img/stripe.png"
-							initial={{ opacity: 0, y: 400 }}
-							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
-							exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
-							css={centerImage}
-							id="current-image"
-						/>
+						{data.map((instance,index)=>{
+							const {screenshot_url} = instance
+							const select = ()=>{
+								selectInstance({current: index})
+							}
+							return (
+								<motion.img
+									onClick={select}
+									src={getFile(screenshot_url)}
+									initial={{ opacity: 0, y: 400 }}
+									animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
+									exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
+									css={centerImage}
+									id="current-image"
+								/>
+							)
+						})}
 
-						<motion.img
+						{/* <motion.img
 							src="/img/stripe.png"
 							initial={{ opacity: 0, y: 400 }}
 							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
@@ -96,19 +123,32 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
 							exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
 							css={isVisible ? leftImage : null}
-						/>
+						/> */}
 					</>
-					<div className="flex" css={css`position: fixed; bottom: 20px;`}>
-					<span className="mr-8">for navigating use </span>
-						<div className="flex" css={css`gap: 8px;`}>
-							<Arrow/>
-							<Arrow css={css`transform: rotate(180deg);`}/>
+					<div
+						className="flex"
+						css={css`
+							position: fixed;
+							bottom: 20px;
+						`}
+					>
+						<span className="mr-8">for navigating use </span>
+						<div
+							className="flex"
+							css={css`
+								gap: 8px;
+							`}
+						>
+							<Arrow />
+							<Arrow
+								css={css`
+									transform: rotate(180deg);
+								`}
+							/>
 						</div>
 					</div>
 				</motion.div>
 			)}
-		
-
 		</AnimatePresence>
 	);
 };
@@ -141,12 +181,18 @@ const overlayCSS = css`
 `;
 export const WEBSITE_INFO = (): JSX.Element => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
-
+	const [data] = useAtom(pageDataAtom)
+	
 	return (
 		<div css={[CONTAINER_1234_24]}>
-			<div className="flex justify-between pt-40 md:pt-24 md:flex-col md:mb-20" css={css`@media screen and (max-width: 680px){
-				gap: 20px;
-			}`}>
+			<div
+				className="flex justify-between pt-40 md:pt-24 md:flex-col md:mb-20"
+				css={css`
+					@media screen and (max-width: 680px) {
+						gap: 20px;
+					}
+				`}
+			>
 				<div
 					className=""
 					css={css`
@@ -157,11 +203,20 @@ export const WEBSITE_INFO = (): JSX.Element => {
 
 					<div className="flex items-center text-13 font-400 mt-6 text-12 md:leading-1.7 md:mt-2">
 						<span className="mr-8">for navigating use </span>
-						<div className="flex" css={css`gap: 8px;`}>
-							<Arrow/>
-							<Arrow css={css`transform: rotate(180deg);`}/>
+						<div
+							className="flex"
+							css={css`
+								gap: 8px;
+							`}
+						>
+							<Arrow />
+							<Arrow
+								css={css`
+									transform: rotate(180deg);
+								`}
+							/>
 						</div>
-					
+
 						<span className="ml-16">updated 12 times</span>
 					</div>
 				</div>
@@ -183,10 +238,13 @@ export const WEBSITE_INFO = (): JSX.Element => {
 				className="mt-36 md:mt-32 flex md:flex-col-reverse md:pb-40"
 				css={css`
 					gap: 32px;
+					overflow-x:scroll;
 				`}
 			>
-				<SmallCard />
-				<SmallCard />
+				{data.map((instanceInfo,index)=>{
+					return <SmallCard instanceInfo={instanceInfo} index={index} />
+				})}
+			
 			</div>
 		</div>
 	);
@@ -210,17 +268,23 @@ const zoomBox = css`
 
 export const WEBSITE_FULL_VIEW = () => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
+	const [data] = useAtom(pageDataAtom)
+	const [info] = useAtom(selectedInfoAtom);
+
+	const selectedIndex = info.current;
+	const {screenshot_url} = data[selectedIndex]
+
 
 	return (
 		<div className="mt-64 md:hidden">
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
-			<motion.img src="/img/stripe.png" initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
+			<motion.img src={getFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
 	);
 };
 
 const imageCSS = css`
-	width: 129px;
+	min-width: 129px;
 	height: 83px;
 	background: url(Screenshot 2022-11-28 at 11.16.png);
 	border: 1.5px solid #bbbbbb;

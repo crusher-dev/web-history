@@ -17,6 +17,7 @@
 		"@radix-ui/react-checkbox": "^1.0.0",
 		"@radix-ui/react-icons": "^1.1.1",
 		"@stitches/react": "^1.2.8",
+		"@supabase/supabase-js": "^2.1.1",
 		"crusher.dev": "^0.5.5",
 		"esbuild": "^0.15.2",
 		"framer-motion": "^7.6.18",
