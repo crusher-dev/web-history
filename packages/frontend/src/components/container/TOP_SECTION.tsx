@@ -47,11 +47,20 @@ const menuCSS = css`
 
 `;
 
-export const INPUT = () => {
+export const SEARCH_INPUT = () => {
 	const [showBar, setShow] = useState(false);
+	const [query,setQuery] = useState("")
 	return (
 		<div className="relative" css={inputContainer}>
-			<input onBlur={setShow.bind(this, false)} onFocus={setShow.bind(this, true)} id="search" placeholder="search website" css={inputCSS} className="text-12" autoComplete="off" />
+			<input
+			value={query}
+			onChange={(e)=>{
+				setQuery(e.target.value)
+			}}
+			onBlur={()=>{
+				// basic hack don't want to add event listener right now
+				setTimeout(setShow.bind(this, false),100)
+			}} onFocus={setShow.bind(this, true)} id="search" placeholder="search website" css={inputCSS} className="text-12" autoComplete="off" />
 			<SearchIcon
 				className="absolute"
 				css={css`
@@ -63,9 +72,9 @@ export const INPUT = () => {
 			{showBar && (
 				<div className="absolute flex flex-col" css={suggestionBoxCSS}>
 					<div className="items text-12.5">Search for google.com</div>
-					<div className="items text-12.5">Search for google.com</div>
-					<div className="items text-12.5">Search for google.com</div>
-					<div className="items text-12.5">Search for google.com</div>
+					<a href={`/${query}`}>
+					<div className="items text-12.5">track {query}</div>
+					</a>
 				</div>
 			)}
 		</div>
@@ -108,9 +117,7 @@ const MENU = () => {
 					website history
 				</div>
 			</a>
-
-			<INPUT />
-
+			<SEARCH_INPUT />
 			<div
 				className="flex items-center"
 				css={css`
@@ -149,7 +156,7 @@ const MiddleBar = () => {
 
 	const desktopLabel = (
 		<React.Fragment>
-			: fast{" "}
+		fast{" "}
 			<span
 				css={css`
 					color: #41bbff;

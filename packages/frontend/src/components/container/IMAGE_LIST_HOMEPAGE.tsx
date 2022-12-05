@@ -46,6 +46,7 @@ const SiteCard = ({item}: any)=>{
 		</a>
 	)
 }
+
 const ImageCarousel = ({className,name,list}:any)=>{
 	return (
 		<div css={carouselCSS} className={className}>

@@ -1,12 +1,18 @@
 import { css } from "@emotion/react";
 
-export const Button = ({ children }) => {
+export const Button = ({ children, type }) => {
 	return (
-		<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
+		<div css={[buttonCSS,typeCSS[type]]} className="flex no-select leading-none items-center pb-6 text-13">
 			{children}
 		</div>
 	);
 };
+
+const typeCSS = {
+	large: css`
+		height: 36px;
+	`
+}
 
 const buttonCSS = css`
 	background: rgba(255, 255, 255, 0.04);

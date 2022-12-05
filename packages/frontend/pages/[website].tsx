@@ -8,6 +8,7 @@ import WEBSITE_SCREEN from "../src/screens/website";
 import { useHydrateAtoms } from "jotai/utils";
 
 export const pageDataAtom = atom([]);
+export const isAvailableAtom = atom((get) => get(pageDataAtom).length > 0)
 export const selectedInfoAtom = atom({
 	current: 0,
 });
@@ -32,7 +33,9 @@ export async function getServerSideProps({ query }) {
 		return new Date(x.timestamp) - new Date(y.timestamp);
 	});
 
-	return { props: { siteRecord: sortedRecord } };
+	return { props: { 
+		siteRecord: sortedRecord,
+	 } };
 }
 
 export default WebsitePage;
