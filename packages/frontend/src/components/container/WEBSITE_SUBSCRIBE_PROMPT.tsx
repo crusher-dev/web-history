@@ -81,7 +81,7 @@ background: rgba(0, 0, 0, 0.11);
 border: 1px solid #1B1B1B;
 backdrop-filter: blur(8.5px);
 /* Note: backdrop-filter has minimal browser support */
-width: 464px;
+width: 472px;
 border-radius: 19px;
 max-width: 100%
 `
