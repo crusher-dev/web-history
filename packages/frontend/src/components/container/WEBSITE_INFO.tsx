@@ -10,6 +10,11 @@ import { Button } from "../common/Button";
 import { atom, useAtom } from "jotai";
 import { pageDataAtom, selectedInfoAtom } from "../../../pages/[website]";
 import { useRouter } from "next/router";
+import { KeyboardEvent } from "react";
+import { KeyboardEventHandler } from "react";
+import { useRef } from "react";
+import { useUpdateAtom } from "jotai/utils";
+import { useCallback } from "react";
 
 const zoomAtom = atom(false);
 
@@ -29,8 +34,17 @@ export const SmallCard = ({ instanceInfo, index }) => {
 
 	const date = new Date(timestamp);
 
+	const Wrapper = useCallback(({children})=>{
+		if(!!window & window.innerWidth < 600){
+			return <a href={getFile(thumbnail_url)} target="_blank">{children}</a>
+		}
+		return children;
+
+	},[])
+
 	return (
-		<motion.div
+		<Wrapper>
+			<motion.div
 			style={{
 				opacity: 0.4,
 			}}
@@ -47,16 +61,18 @@ export const SmallCard = ({ instanceInfo, index }) => {
 				{date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
 			</div>
 		</motion.div>
+		</Wrapper>
 	);
 };
 
 const ZOOM_MODE = ({ isVisible, setZoom }) => {
 	useEffect(() => {
-		const handleScroll = (e) => {
+		const handleScroll:any = (e:KeyboardEvent) => {
+			e.stopPropagation()
 			const { keyCode } = e;
 
-			const scrollBox = document.querySelector("#scroll-box");
-			const currentImage = document.querySelector("#current-image");
+			const scrollBox = document.querySelector("#scroll-box") as HTMLImageElement;
+			const currentImage  = document.querySelector("#current-image") as HTMLImageElement;
 
 			if (keyCode === 37) {
 				scrollBox.scrollTo({
@@ -71,16 +87,16 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 				});
 			}
 		};
-		document.addEventListener("keydown", handleScroll);
-
-		return () => {
+		if(isVisible){
+			document.addEventListener("keydown", handleScroll);
+		}else{
 			document.body.style.overflow = "normal";
 			document.removeEventListener("keydown", handleScroll);
-		};
-	}, []);
+		}
+	}, [isVisible]);
 
 	useEffect(() => {
-		document.body.style.overflow = isVisible ? "hidden" : "normal";
+		document.body.style.overflow = isVisible ? "hidden" : "scroll";
 	}, [isVisible]);
 
 	const [data] = useAtom(pageDataAtom);
@@ -145,12 +161,6 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 	);
 };
 
-const leftImage = css`
-	border-radius: 29px;
-	width: 775px;
-	height: 465px;
-	border: 10px solid rgba(255, 255, 255, 0.1);
-`;
 const centerImage = css`
 	width: 775px;
 	height: 465px;
@@ -159,7 +169,7 @@ const centerImage = css`
 	border: 10px solid rgba(255, 255, 255, 0.1);
 
 	:hover{
-	    border: 10px solid rgb(255 255 255 / 30%);
+	    border: 10px solid rgb(255 255 255 / 50%) !important;
 	}
 `;
 const overlayCSS = css`
@@ -176,10 +186,37 @@ const overlayCSS = css`
 	overflow-x: scroll;
 `;
 export const WEBSITE_INFO = (): JSX.Element => {
-	const [showZoom, setZoom] = useAtom(zoomAtom);
+	const [zoom, setZoom] = useAtom(zoomAtom);
 	const [data] = useAtom(pageDataAtom);
-
+	const [instance, selectInstance] = useAtom(selectedInfoAtom);
 	const { query } = useRouter();
+
+	useEffect(() => {
+		const handleScroll:any = (e:KeyboardEvent) => {
+			e.stopPropagation()
+			const { keyCode } = e;
+			if(zoom) return
+
+			if (keyCode === 39) {
+				selectInstance(({current})=>{
+					if(current >= data.length) return {current}
+					return {current: ++current}
+				})
+			}
+			if (keyCode === 37) {
+					selectInstance(({current})=>{
+						if(current <= 0) return {current}
+						return {current: --current}
+					})
+			}
+		};
+		document.addEventListener("keydown", handleScroll);
+
+		return ()=>{
+			document.removeEventListener("keydown", handleScroll);
+		}
+	}, []);
+
 
 	return (
 		<div css={[CONTAINER_1234_24]}>
@@ -282,7 +319,7 @@ export const WEBSITE_FULL_VIEW = () => {
 			margin-bottom: 100px;
 			img{
 				border-radius: 18px;
-				border: 4px solid #ffffff4f;
+				border: 10px solid #ffffff4f;
 			}
 		`]}>
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />

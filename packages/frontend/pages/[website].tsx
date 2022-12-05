@@ -17,7 +17,7 @@ const Home: NextPage = ({ siteRecord }: any) => {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Website history - By Crusher</title>
+				<title>Website history - by Crusher</title>
 			</Head>
 			<WEBSITE_SCREEN />
 		</React.Fragment>
