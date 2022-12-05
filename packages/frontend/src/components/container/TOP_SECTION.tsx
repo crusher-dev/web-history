@@ -213,7 +213,7 @@ const MiddleBar = () => {
 				<a href="https://github.com/crusher-dev/crusher" target="_blank">
 					<GithubIcon alt="Crusher codebase" />
 				</a>
-				<a href="" target="_blank">
+				<a href="https://docs.crusher.dev/getting-started/create-your-first-test#recording-first-test" target="_blank">
 					<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
 						demo
 					</div>

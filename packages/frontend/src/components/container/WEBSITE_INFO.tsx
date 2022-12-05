@@ -194,22 +194,24 @@ export const WEBSITE_INFO = (): JSX.Element => {
 					<h1 className="text-16 mt-0 mb-0 font-900 leading-none md:text-16 md:leading-1.7">{query.website} design history</h1>
 
 					<div className="flex items-center text-13 font-400 mt-6 text-12 md:leading-1.7 md:mt-2">
-						<span className="mr-8">for navigating use </span>
-						<div
-							className="flex"
-							css={css`
-								gap: 8px;
-							`}
-						>
-							<Arrow />
-							<Arrow
+						<div className="flex items-center md:hidden">
+							<span className="mr-8">for navigating use </span>
+							<div
+								className="flex"
 								css={css`
-									transform: rotate(180deg);
+									gap: 8px;
 								`}
-							/>
+							>
+								<Arrow />
+								<Arrow
+									css={css`
+										transform: rotate(180deg);
+									`}
+								/>
+							</div>
 						</div>
 
-						<span className="ml-16">updated 12 times</span>
+						<span className="ml-16">updated {data.length} times</span>
 					</div>
 				</div>
 				<div
