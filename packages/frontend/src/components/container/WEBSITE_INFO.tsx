@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-import React from "react";
+
 import { CONTAINER_1234_24 } from "../../constants/style";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +16,6 @@ import { useCallback } from "react";
 const zoomAtom = atom(false);
 
 const getFile = (file_url) => {
-	// return `https://backblaze-b1.crusher.dev/file/web-history/${file_url}`
 	return `https://f004.backblazeb2.com/file/web-history/${file_url}`;
 };
 
@@ -194,7 +193,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 
 			if (keyCode === 39) {
 				selectInstance(({current})=>{
-					if(current >= data.length) return {current}
+					if(current === data.length) return {current}
 					return {current: ++current}
 				})
 			}
