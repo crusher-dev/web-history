@@ -69,9 +69,9 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
 
         const page = await browserContext.newPage();
         // Load wa_url in iframe
-        const pageRes =await page.goto(record.wa_url, {timeout: 60 * 1000});
+        const pageRes =await page.goto(record.wa_url, {timeout: 90 * 1000}).catch((err) => (null));
         // Make sure status is not greater than 404
-        if(pageRes?.status()! > 400) {
+        if(pageRes && pageRes?.status()! > 400) {
             console.log(`Page ${record.wa_url} not found`);
             return;
         }
