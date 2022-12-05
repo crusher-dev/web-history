@@ -179,7 +179,7 @@ const MiddleBar = () => {
 					</div>
 				</div>
 				<div
-					className="mt-16 text-13.5 md:mt-6 md:text-12.5 md:leading-2"
+					className="mt-12 text-12 md:mt-6 md:text-12.5 md:leading-2"
 					css={css`
 						@media screen and (max-width: 680px) {
 							display: none;
@@ -189,7 +189,7 @@ const MiddleBar = () => {
 					{desktopLabel}
 				</div>
 				<div
-					className="mt-16 text-13.5 md:mt-8 md:text-12.5 md:leading-2"
+					className="mt-12 text-12 md:mt-8 md:text-12.5 md:leading-2"
 					css={css`
 						@media screen and (min-width: 680px) {
 							display: none;

@@ -22,17 +22,15 @@ const SUBSCRIVE_CARD = ()=>{
 	);
 
 	return (
-		<div css={cardCSS} className={" m-auto pb-36 md:mt-70"}>
+		<div css={cardCSS} className={" m-auto pb-36 md:mt-48 mt-50"}>
 			<div className="py-32 px-32 md:px-28 md:py-24">
-				<div className="text-16 font-800 mb-10">We’re tracking this website</div>
+				<div className="text-15 font-800 mb-4">We’re tracking this website</div>
 				<div className="mb-24 text-12" css={css`color: #CBCBCB;`}>queue #210</div>
 				<div className="flex mb-24" css={css`gap: 12px;`}>
 					<input css={inputCSS} placeholder="email"/> <Button type={"large"}>subscribe</Button>
-
 				</div>
-				<div className="text-11 leading-2 mb-52" css={css`color: #CBCBCB;`}>we’ll send you an email when we have tracked this page+ other updates</div>
+				<div className="text-11 leading-2 mb-36" css={css`color: #CBCBCB;`}>we’ll send you an email when we have tracked this page+ other updates</div>
 			</div>
-
 
 			<div className="flex flex-col justify-center items-center py-36" css={css`
 				border-top: 1px dashed #1B1B1B;
