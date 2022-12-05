@@ -13,20 +13,20 @@ import { useRouter } from "next/router";
 
 const zoomAtom = atom(false);
 
-const getFile = (file_url)=>{
+const getFile = (file_url) => {
 	// return `https://backblaze-b1.crusher.dev/file/web-history/${file_url}`
-	return `https://f004.backblazeb2.com/file/web-history/${file_url}`
-}
+	return `https://f004.backblazeb2.com/file/web-history/${file_url}`;
+};
 
-export const SmallCard = ({instanceInfo,index}) => {
-	const {thumbnail_url,timestamp} = instanceInfo;
-	const [,selectInstance] = useAtom(selectedInfoAtom)
+export const SmallCard = ({ instanceInfo, index }) => {
+	const { thumbnail_url, timestamp } = instanceInfo;
+	const [, selectInstance] = useAtom(selectedInfoAtom);
 
-	const select = ()=>{
-		selectInstance({current: index})
-	}
+	const select = () => {
+		selectInstance({ current: index });
+	};
 
-	const date = new Date(timestamp)
+	const date = new Date(timestamp);
 
 	return (
 		<motion.div
@@ -41,7 +41,9 @@ export const SmallCard = ({instanceInfo,index}) => {
 			onClick={select.bind(this)}
 		>
 			<img src={getFile(thumbnail_url)} css={imageCSS} />
-			<div className="mt-12 md:mt-12">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</div>
+			<div className="mt-12 md:mt-12">
+				{date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
+			</div>
 		</motion.div>
 	);
 };
@@ -79,10 +81,8 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 		document.body.style.overflow = isVisible ? "hidden" : "normal";
 	}, [isVisible]);
 
-	const [data] = useAtom(pageDataAtom)
-	const [,selectInstance] = useAtom(selectedInfoAtom)
-
-
+	const [data] = useAtom(pageDataAtom);
+	const [, selectInstance] = useAtom(selectedInfoAtom);
 
 	return (
 		<AnimatePresence>
@@ -97,11 +97,11 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 					id="scroll-box"
 				>
 					<>
-						{data.map((instance,index)=>{
-							const {screenshot_url} = instance
-							const select = ()=>{
-								selectInstance({current: index})
-							}
+						{data.map((instance, index) => {
+							const { screenshot_url } = instance;
+							const select = () => {
+								selectInstance({ current: index });
+							};
 							return (
 								<motion.img
 									onClick={select}
@@ -112,7 +112,7 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 									css={centerImage}
 									id="current-image"
 								/>
-							)
+							);
 						})}
 					</>
 					<div
@@ -171,10 +171,10 @@ const overlayCSS = css`
 `;
 export const WEBSITE_INFO = (): JSX.Element => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
-	const [data] = useAtom(pageDataAtom)
+	const [data] = useAtom(pageDataAtom);
 
-	const {query} = useRouter()
-	
+	const { query } = useRouter();
+
 	return (
 		<div css={[CONTAINER_1234_24]}>
 			<div
@@ -230,13 +230,12 @@ export const WEBSITE_INFO = (): JSX.Element => {
 				className="mt-36 md:mt-32 flex md:flex-col-reverse md:pb-40"
 				css={css`
 					gap: 32px;
-					overflow-x:scroll;
+					overflow-x: scroll;
 				`}
 			>
-				{data.map((instanceInfo,index)=>{
-					return <SmallCard instanceInfo={instanceInfo} index={index} />
+				{data.map((instanceInfo, index) => {
+					return <SmallCard instanceInfo={instanceInfo} index={index} />;
 				})}
-			
 			</div>
 		</div>
 	);
@@ -260,15 +259,15 @@ const zoomBox = css`
 
 export const WEBSITE_FULL_VIEW = () => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
-	const [data] = useAtom(pageDataAtom)
+	const [data] = useAtom(pageDataAtom);
 	const [info] = useAtom(selectedInfoAtom);
 
 	const selectedIndex = info.current;
 
-	if(!data[selectedIndex]){
-		return null
+	if (!data[selectedIndex]) {
+		return null;
 	}
-	const {screenshot_url} = data[selectedIndex]
+	const { screenshot_url } = data[selectedIndex];
 	return (
 		<div className="mt-64 md:hidden">
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
