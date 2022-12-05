@@ -20,11 +20,12 @@ const getFile = (file_url) => {
 
 export const SmallCard = ({ instanceInfo, index }) => {
 	const { thumbnail_url, timestamp } = instanceInfo;
-	const [, selectInstance] = useAtom(selectedInfoAtom);
+	const [selectedInstance, selectInstance] = useAtom(selectedInfoAtom);
 
 	const select = () => {
 		selectInstance({ current: index });
 	};
+	const isSelected = selectedInstance.current === index;
 
 	const date = new Date(timestamp);
 
@@ -33,6 +34,7 @@ export const SmallCard = ({ instanceInfo, index }) => {
 			style={{
 				opacity: 0.4,
 			}}
+			animate={{opacity: isSelected? 1 : 0.4}}
 			whileHover={{
 				y: -3,
 				opacity: 1,
@@ -155,6 +157,10 @@ const centerImage = css`
 	border-radius: 29px;
 	object-fit: cover;
 	border: 10px solid rgba(255, 255, 255, 0.1);
+
+	:hover{
+	    border: 10px solid rgb(255 255 255 / 30%);
+	}
 `;
 const overlayCSS = css`
 	position: fixed;
@@ -271,7 +277,12 @@ export const WEBSITE_FULL_VIEW = () => {
 	}
 	const { screenshot_url } = data[selectedIndex];
 	return (
-		<div className="mt-64 md:hidden">
+		<div className="mt-64 md:hidden" css={[CONTAINER_1234_24,css`
+			margin-top: 40px;
+			img{
+				border-radius: 20px;
+			}
+		`]}>
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
 			<motion.img src={getFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
