@@ -281,7 +281,7 @@ export const WEBSITE_FULL_VIEW = () => {
 			margin-top: 60px;
 			margin-bottom: 100px;
 			img{
-				border-radius: 20px;
+				border-radius: 18px;
 				border: 4px solid #ffffff4f;
 			}
 		`]}>
