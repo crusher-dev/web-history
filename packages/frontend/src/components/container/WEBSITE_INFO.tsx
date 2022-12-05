@@ -278,7 +278,8 @@ export const WEBSITE_FULL_VIEW = () => {
 	const { screenshot_url } = data[selectedIndex];
 	return (
 		<div className="mt-64 md:hidden" css={[CONTAINER_1234_24,css`
-			margin-top: 40px;
+			margin-top: 60px;
+			margin-bottom: 100px;
 			img{
 				border-radius: 20px;
 				border: 4px solid #ffffff4f;
