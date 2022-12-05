@@ -54,15 +54,7 @@ export const INPUT = () => {
 	const [showBar, setShow] = useState(false);
 	return (
 		<div className="relative" css={inputContainer}>
-			<input
-				onBlur={setShow.bind(this, false)}
-				onFocus={setShow.bind(this, true)}
-				id="search"
-				placeholder="search website"
-				css={inputCSS}
-				className="text-12"
-				autoComplete="off"
-			/>
+			<input onBlur={setShow.bind(this, false)} onFocus={setShow.bind(this, true)} id="search" placeholder="search website" css={inputCSS} className="text-12" autoComplete="off" />
 			<SearchIcon
 				className="absolute"
 				css={css`
@@ -217,14 +209,7 @@ const MiddleBar = () => {
 						zoom: 0.85;
 					`}
 				>
-					<a
-						class="github-button"
-						href="https://github.com/crusherdev/crusher"
-						data-show-count="true"
-						aria-label="Star crusherdev/crusher on GitHub"
-						data-icon="octicon-star"
-						data-size="large"
-					>
+					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub" data-icon="octicon-star" data-size="large">
 						Star
 					</a>
 				</div>
@@ -246,12 +231,7 @@ const TOP_SECTION = (): JSX.Element => {
 	return (
 		<div className={"relative"}>
 			<BLUR_LAYER />
-			<div
-				css={[
-					CONTAINER_1234_24,
-					// css`background: black; padding-bottom: 20px;`
-				]}
-			>
+			<div css={[CONTAINER_1234_24]}>
 				<MENU />
 				<MiddleBar />
 			</div>
