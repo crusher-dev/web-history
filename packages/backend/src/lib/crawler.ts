@@ -8,7 +8,7 @@ import pixelmatch from "pixelmatch";
 // promisify
 import { promisify } from "util";
 import { clusteriseImages, convertPngToWebp, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
-import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord } from "./webArchive";
+import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord, WebArchive } from "./webArchive";
 import { Storage } from "./storage";
 import { WebHistoryDB } from "./db";
 
@@ -17,7 +17,10 @@ export class Crawler {
     browserContext: BrowserContext | null = null;
     webArchiveRecords: Array<IWebArchiveRecord> = [];
     cache: any = {};
+    webArchive: WebArchive | null = null;
     currentIndex: number = 0;
+
+    _cacheMap: any = {};
 
     constructor(private website: string){}
 
@@ -29,11 +32,19 @@ export class Crawler {
     }
 
     async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}) {
+        if(this._cacheMap[left + "_" + right]) {
+            return;
+        }
+        this._cacheMap[left + "_" + right] = true;
+        
         if(left >= right) {
             return outputs;
         }
 
+        console.log("Left", left, "Right", right);
+
         const mid = Math.floor((left + right) / 2);
+        
         const [leftScreenshot, rightScreenshot] = await Promise.all([getWebArchiveScreenshot(records[left], this.browser!, this.browserContext!),  getWebArchiveScreenshot(records[right], this.browser!, this.browserContext!)]);
 
         const isDiff = await this.isNewScreenshot(leftScreenshot?.viewPortScreenshot!, rightScreenshot?.viewPortScreenshot!);
@@ -47,8 +58,10 @@ export class Crawler {
                 await this.saveScreenshot(rightScreenshot?.fullPageScreenshot!, rightScreenshot?.viewPortScreenshot!, right);
             }
 
-            await this.getUniqueWebArchiveRecords(left, mid, records, outputs);
-            await this.getUniqueWebArchiveRecords(mid + 1, right, records, outputs);
+                await this.getUniqueWebArchiveRecords(left, mid, records, outputs);
+            await this.getUniqueWebArchiveRecords(mid, right, records, outputs);
+            // await this.getUniqueWebArchiveRecords(left, mid, records, outputs);
+            // await this.getUniqueWebArchiveRecords(mid, right, records, outputs);
         } else {
             // Save the starting screenshots
             if(!Object.keys(outputs).length) {
@@ -105,9 +118,13 @@ export class Crawler {
                 height: 1080
             }
         });
+        this.webArchive = new WebArchive(this.browser, this.browserContext, this.website);
         // Open new page so that browser context is never really destroyed
         await this.browserContext.newPage();
-        this.webArchiveRecords = await getWebArchiveRecords(this.website);
+        this.webArchiveRecords = await this.webArchive.getWebArchiveRecords(
+            this.website,
+        );
+        // fs.writeFileSync("records.json", JSON.stringify(this.webArchiveRecords, null, 2));
         const directory = new URL(this.website).hostname;
         await this.takeScreenshots(this.webArchiveRecords, directory, this.webArchiveRecords.length);
         await this.browserContext.close();
