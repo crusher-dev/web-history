@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { isAvailableAtom } from "../../pages/[website]";
+import { Footer, Label } from "../components/container/Footer";
 
 import TOP_SECTION from "../components/container/TOP_SECTION";
 import { WEBSITE_INFO, WEBSITE_FULL_VIEW } from "../components/container/WEBSITE_INFO";
@@ -23,6 +24,8 @@ const WEBSITE_SCREEN: NextPage = () => {
 			{!isAvaiable && (
 				<WEBSITE_SUBSCRIBE_PROMPT/>
 			)}
+			<Label/>
+			<Footer/>
 		</React.Fragment>
 	);
 };

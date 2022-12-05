@@ -22,7 +22,7 @@ const SUBSCRIVE_CARD = ()=>{
 	);
 
 	return (
-		<div css={cardCSS} className={" m-auto pb-36 md:mt-48 mt-50"}>
+		<div css={cardCSS} className={" m-auto pb-36 md:mt-48 mt-64"}>
 			<div className="py-32 px-32 md:px-28 md:py-24">
 				<div className="text-15 font-800 mb-4">We’re tracking this website</div>
 				<div className="mb-24 text-12" css={css`color: #CBCBCB;`}>queue #210</div>
@@ -46,8 +46,9 @@ const SUBSCRIVE_CARD = ()=>{
 					{label}
 				</div>
 				<div className="flex mb-24" css={css`gap: 12px;`}>
-					<Button type={"large"}>Star crusher</Button>
-					<Button type={"large"}>Join discord</Button>
+					<a href="https://github.com/cruherdev/crusher"><Button type={"large"}>Star crusher</Button></a>
+					<a href="https://discord.com/invite/dHZkSNXQrg"><Button type={"large"}>Join discord</Button></a>
+
 				</div>
 			</div>
 		</div>
@@ -79,7 +80,7 @@ background: rgba(0, 0, 0, 0.11);
 border: 1px solid #1B1B1B;
 backdrop-filter: blur(8.5px);
 /* Note: backdrop-filter has minimal browser support */
-width: 472px;
+width: 464px;
 border-radius: 19px;
 max-width: 100%
 `

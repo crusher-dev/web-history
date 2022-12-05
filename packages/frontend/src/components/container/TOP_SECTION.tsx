@@ -130,7 +130,7 @@ const MENU = () => {
 				`}
 			>
 				<a className="text-13" href="/list/a">list</a>
-				<a className="text-13">how it works</a>
+				{/* <a className="text-13">how it works</a> */}
 				<div css={buttonCSS} className="flex no-select leading-none items-center pb-6 text-13">
 					track site
 				</div>
