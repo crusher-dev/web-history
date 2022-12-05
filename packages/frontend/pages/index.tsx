@@ -1,12 +1,16 @@
 import { css } from "@emotion/react";
+import { useHydrateAtoms } from "jotai/utils";
+import { atom } from "jotai/vanilla";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { WebHistoryDB } from "../src/modules/supabase";
 import HOME_SCREEN from "../src/screens/home";
 
+export const indexDataAtom = atom({});
+
 const Home: NextPage = (props) => {
-	console.log(props)
+	useHydrateAtoms([[indexDataAtom, props.list]]);
 	return (
 		<React.Fragment>
 			<Head>
@@ -22,5 +26,8 @@ export default Home;
 
 export async function getServerSideProps({ query }) {
 	const {data} = await WebHistoryDB.getSiteRecords();
-	return { props: { sites: data } };
+	
+	return { props: { list:{
+		popular: data
+	} } };
 }

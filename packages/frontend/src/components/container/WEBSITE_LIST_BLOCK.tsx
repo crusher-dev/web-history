@@ -37,7 +37,7 @@ export const WEBSITE_LIST_BLOCK = (): JSX.Element => {
 				</div>
 			</div>
 
-			<div className="flex text-13 mt-12" css={css`gap: 20px; `}>
+			<div className="flex text-13 mt-12 md:flex-wrap" css={css`gap: 20px; `}>
 				<span>Sites starting with by:-</span>
 				{alphabets.map((alphabet)=>{
 					const isSelected = query?.character === alphabet

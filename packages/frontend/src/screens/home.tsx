@@ -1,8 +1,6 @@
-import { css } from "@emotion/react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import React from "react";
-import IMAGE_LIST_HOMEPAGE from "../components/container/IMAGE_LIST_HOMEPAGE";
+import SITES_SECTION from "../components/container/IMAGE_LIST_HOMEPAGE";
 import TOP_SECTION from "../components/container/TOP_SECTION";
 
 const HOME_SCREEN: NextPage = () => {
@@ -10,7 +8,7 @@ const HOME_SCREEN: NextPage = () => {
 		<React.Fragment>
 			<TOP_SECTION />
 
-			<IMAGE_LIST_HOMEPAGE />
+			<SITES_SECTION />
 		</React.Fragment>
 	);
 };
