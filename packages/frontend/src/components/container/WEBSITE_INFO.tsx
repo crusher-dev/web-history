@@ -11,9 +11,6 @@ import { atom, useAtom } from "jotai";
 import { pageDataAtom, selectedInfoAtom } from "../../../pages/[website]";
 import { useRouter } from "next/router";
 import { KeyboardEvent } from "react";
-import { KeyboardEventHandler } from "react";
-import { useRef } from "react";
-import { useUpdateAtom } from "jotai/utils";
 import { useCallback } from "react";
 
 const zoomAtom = atom(false);
@@ -31,15 +28,13 @@ export const SmallCard = ({ instanceInfo, index }) => {
 		selectInstance({ current: index });
 	};
 	const isSelected = selectedInstance.current === index;
-
 	const date = new Date(timestamp);
 
 	const Wrapper = useCallback(({children})=>{
-		if(!!window & window.innerWidth < 600){
+		if(typeof(window) !== 'undefined' && window.innerWidth < 600){
 			return <a href={getFile(thumbnail_url)} target="_blank">{children}</a>
 		}
 		return children;
-
 	},[])
 
 	return (

@@ -96,16 +96,18 @@ const suggestionBoxCSS = css`
 const MENU = () => {
 	return (
 		<div id="menu" className="realtive flex items-center justify-between pt-24 relative" css={menuCSS}>
-			<div
-				id="logo"
-				className="font-source font-800 text-14"
-				css={css`
-					color: #fff;
-					grid-area: logo;
-				`}
-			>
-				website history
-			</div>
+			<a href="https://crusher.dev/website-history">
+				<div
+					id="logo"
+					className="font-source font-800 text-14"
+					css={css`
+						color: #fff;
+						grid-area: logo;
+					`}
+				>
+					website history
+				</div>
+			</a>
 
 			<INPUT />
 

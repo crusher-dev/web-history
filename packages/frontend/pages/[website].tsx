@@ -1,8 +1,8 @@
-import { css } from "@emotion/react";
-import { useAtom, atom } from "jotai";
+import {  atom } from "jotai";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
+
 import { WebHistoryDB } from "../src/modules/supabase";
 import WEBSITE_SCREEN from "../src/screens/website";
 import { useHydrateAtoms } from "jotai/utils";
@@ -12,7 +12,7 @@ export const selectedInfoAtom = atom({
 	current: 0,
 });
 
-const Home: NextPage = ({ siteRecord }: any) => {
+const WebsitePage: NextPage = ({ siteRecord }: any) => {
 	useHydrateAtoms([[pageDataAtom, siteRecord]]);
 	return (
 		<React.Fragment>
@@ -23,9 +23,9 @@ const Home: NextPage = ({ siteRecord }: any) => {
 		</React.Fragment>
 	);
 };
+
 export async function getServerSideProps({ query }) {
 	const { website } = query;
-
 	const res = await WebHistoryDB.getSiteSnapshots(website);
 	const siteRecord = res?.data || [];
 	const sortedRecord = siteRecord.sort((x: any, y: any) => {
@@ -35,4 +35,4 @@ export async function getServerSideProps({ query }) {
 	return { props: { siteRecord: sortedRecord } };
 }
 
-export default Home;
+export default WebsitePage;
