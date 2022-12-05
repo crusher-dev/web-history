@@ -9,20 +9,25 @@ import { Arrow, ZoomIcon } from "../../constants/svg";
 import { Button } from "../common/Button";
 import { atom, useAtom } from "jotai";
 import { pageDataAtom, selectedInfoAtom } from "../../../pages/[website]";
+import { useRouter } from "next/router";
 
 const zoomAtom = atom(false);
 
 const getFile = (file_url)=>{
+	// return `https://backblaze-b1.crusher.dev/file/web-history/${file_url}`
 	return `https://f004.backblazeb2.com/file/web-history/${file_url}`
 }
 
 export const SmallCard = ({instanceInfo,index}) => {
-	const {thumbnail_url} = instanceInfo;
+	const {thumbnail_url,timestamp} = instanceInfo;
 	const [,selectInstance] = useAtom(selectedInfoAtom)
 
 	const select = ()=>{
 		selectInstance({current: index})
 	}
+
+	const date = new Date(timestamp)
+
 	return (
 		<motion.div
 			style={{
@@ -36,7 +41,7 @@ export const SmallCard = ({instanceInfo,index}) => {
 			onClick={select.bind(this)}
 		>
 			<img src={getFile(thumbnail_url)} css={imageCSS} />
-			<div className="mt-12 md:mt-12">oct 2020</div>
+			<div className="mt-12 md:mt-12">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</div>
 		</motion.div>
 	);
 };
@@ -109,21 +114,6 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 								/>
 							)
 						})}
-
-						{/* <motion.img
-							src="/img/stripe.png"
-							initial={{ opacity: 0, y: 400 }}
-							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
-							exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
-							css={isVisible ? leftImage : null}
-						/>
-						<motion.img
-							src="/img/stripe.png"
-							initial={{ opacity: 0, y: 400 }}
-							animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
-							exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
-							css={isVisible ? leftImage : null}
-						/> */}
 					</>
 					<div
 						className="flex"
@@ -182,6 +172,8 @@ const overlayCSS = css`
 export const WEBSITE_INFO = (): JSX.Element => {
 	const [showZoom, setZoom] = useAtom(zoomAtom);
 	const [data] = useAtom(pageDataAtom)
+
+	const {query} = useRouter()
 	
 	return (
 		<div css={[CONTAINER_1234_24]}>
@@ -199,7 +191,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 						color: #cbcbcb;
 					`}
 				>
-					<h1 className="text-16 mt-0 mb-0 font-900 leading-none md:text-16 md:leading-1.7">stripe.com design history</h1>
+					<h1 className="text-16 mt-0 mb-0 font-900 leading-none md:text-16 md:leading-1.7">{query.website} design history</h1>
 
 					<div className="flex items-center text-13 font-400 mt-6 text-12 md:leading-1.7 md:mt-2">
 						<span className="mr-8">for navigating use </span>
@@ -272,9 +264,11 @@ export const WEBSITE_FULL_VIEW = () => {
 	const [info] = useAtom(selectedInfoAtom);
 
 	const selectedIndex = info.current;
+
+	if(!data[selectedIndex]){
+		return null
+	}
 	const {screenshot_url} = data[selectedIndex]
-
-
 	return (
 		<div className="mt-64 md:hidden">
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />

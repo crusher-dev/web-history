@@ -15,7 +15,7 @@ export const selectedInfoAtom = atom({
 
 const Home: NextPage = ({siteRecord} : any) => {
 	useHydrateAtoms([[pageDataAtom,siteRecord]])
-	const [data,setData] = useAtom(pageDataAtom)
+
 
 	return (
 		<React.Fragment>
@@ -28,12 +28,23 @@ const Home: NextPage = ({siteRecord} : any) => {
 };
 
 // This gets called on every request
-export async function getServerSideProps() {
-	// Fetch data from external API
-	const res = await WebHistoryDB.getSiteSnapshots("stripe.com")
-	const siteRecord = res?.data || [];	
+export async function getServerSideProps({query}) {
 
-	return { props: { siteRecord } }
+	const {website} = query;
+
+	// Fetch data from external API
+	const res = await WebHistoryDB.getSiteSnapshots(website)
+	const siteRecord = res?.data || [];	
+	
+	const sortedRecord = siteRecord.sort((x:any, y:any) => {
+		return new Date(x.timestamp) - new Date(y.timestamp);
+	})
+
+	console.log(res, query)
+
+	console.log(siteRecord)
+
+	return { props: { siteRecord: sortedRecord } }
   }
   
 
