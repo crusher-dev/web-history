@@ -21,7 +21,6 @@ const layerCSS = css`
 
 	background: url("/img/stripe.png");
 	background-position: -200px;
-	// background: linear-gradient(0deg, rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)), url("/img/stripe.png");
 
 	filter: blur(12.5px);
 	z-index: -1;
@@ -30,8 +29,6 @@ const layerCSS = css`
 		z-index: 1;
 		height: 201px;
 		width: 100%;
-
-		// background: linear-gradient(180deg, rgba(6, 9, 12, 0.6) 0%, #0A0C0E 100%);
 		background: linear-gradient(180deg, rgba(2, 3, 4, 0.88) 0%, #0a0c0e 100%);
 	}
 `;
