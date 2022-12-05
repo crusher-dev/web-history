@@ -25,7 +25,7 @@ export class Crawler {
         if(!rightScreenshot) return { value: 100 };
         const diffPercentage = await getDiffPercentage(leftScreenshot, rightScreenshot);
         console.log("Diff percentage is", diffPercentage);
-        return { value: diffPercentage > 25 };
+        return { value: diffPercentage > 15 };
     }
 
     async getUniqueWebArchiveRecords(left: number, right: number, records: Array<IWebArchiveRecord>, outputs: any = {}) {
