@@ -16,7 +16,7 @@ import { useCallback } from "react";
 const zoomAtom = atom(false);
 
 const getFile = (file_url) => {
-	return `https://f004.backblazeb2.com/file/web-history/${file_url}`;
+	return `https://web-history.crusher.dev/web-history/${file_url}`;
 };
 
 export const SmallCard = ({ instanceInfo, index }) => {
