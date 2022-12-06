@@ -83,7 +83,13 @@ export async function resizeImageToThumbnail(image: Buffer): Promise<Buffer> {
     return sharp(image).resize(400, 250, { fit: "cover" }).toBuffer();
 }
 
-export async function convertPngToWebp(image: Buffer): Promise<Buffer> {
-    return sharp(image).webp().toBuffer();
+export async function compressPng(image: Buffer): Promise<{buffer: Buffer; type: "jpeg" | "webp"}> {
+    // if image can't be converted to webp, return jpeg image
+    try {
+        return { buffer: await sharp(image).webp().toBuffer(), type: "webp" };
+    } catch {
+        // to jpeg
+        return { buffer: await sharp(image).jpeg({quality: 90}).toBuffer(), type: "jpeg" };
+    }
 }
 export { getOutputDirectory, httpsRequest, clusteriseImages, processImages, getDiffPercentage };

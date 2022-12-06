@@ -1,9 +1,7 @@
-export const BACKBLAZE_CONFIG = {
-    applicationKeyId: process.env.BACKBLAZE_APPLICATION_KEY_ID,
-    applicationKey: process.env.BACKBLAZE_APPLICATION_KEY,
-    bucket: process.env.BACKBLAZE_BUCKET,
-    bucketName: process.env.BACKBLAZE_BUCKET_NAME,
-};
+export const AZURE_CONFIG = {
+    accountName: process.env.AZURE_ACCOUNT_NAME,
+    containerName: process.env.AZURE_STORAGE_CONTAINER_NAME || "web-history",
+}
 
 export const SUPABASE_CONFIG = {
     url: process.env.SUPABASE_URL,

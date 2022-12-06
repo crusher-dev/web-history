@@ -1,42 +1,45 @@
-import B2 from "backblaze-b2";
-import { BACKBLAZE_CONFIG } from "../config";
+import { AZURE_CONFIG } from "../config";
+import { DefaultAzureCredential } from "@azure/identity";
+import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 
 export class Storage {
-    static backBlazeInstance: B2 = new B2({
-        applicationKeyId: BACKBLAZE_CONFIG.applicationKeyId,
-        applicationKey: BACKBLAZE_CONFIG.applicationKey,
-    });
+    static blobServiceClient: BlobServiceClient = new BlobServiceClient(
+        `https://${AZURE_CONFIG.accountName}.blob.core.windows.net`,
+        new DefaultAzureCredential()
+    );
+    static blobContainerClient: ContainerClient | null = null;
 
     static async initialize() {
-        await this.backBlazeInstance.authorize();
+        await this.blobServiceClient.getContainerClient(AZURE_CONFIG.containerName).createIfNotExists();
+        this.blobContainerClient = await this.blobServiceClient.getContainerClient(AZURE_CONFIG.containerName);
     }
 
     static async upload(buffer: Buffer, fileName: string): Promise<void> {
-        const { data: { uploadUrl, authorizationToken } } = await Storage.backBlazeInstance.getUploadUrl({
-            bucketId: BACKBLAZE_CONFIG.bucket,
-        });
-
-        const out =await this.backBlazeInstance.uploadFile({
-            uploadUrl,
-            uploadAuthToken: authorizationToken,
-            fileName,
-            data: buffer,
-        });
-
-            
+        await this.blobContainerClient?.uploadBlockBlob(fileName, buffer, buffer.length);
     }
 
     static async get(fileName: string): Promise<Buffer> {
-        const { data } = await this.backBlazeInstance.downloadFileByName({
-            fileName,
-            bucketName: BACKBLAZE_CONFIG.bucket,
-            responseType: "arraybuffer",
-        });
+        const blobClient = this.blobContainerClient?.getBlockBlobClient(fileName);
+        const downloadBlockBlobResponse = await blobClient?.download();
 
-        return data;
+        const streamToBuffer = (readableStream: any): Promise<Buffer> => {
+            return new Promise((resolve, reject) => {
+                const chunks: any = [];
+                readableStream.on("data", (data: any) => {
+                    chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+                });
+                readableStream.on("end", () => {
+                    resolve(Buffer.concat(chunks));
+                });
+                readableStream.on("error", reject);
+            });
+        };
+        
+        const downloaded: Buffer = await streamToBuffer(downloadBlockBlobResponse?.readableStreamBody!);
+        return downloaded;
     }
 
     static async getUrl (fileName: string): Promise<string> {
-        return `https://f004.backblazeb2.com/file/${BACKBLAZE_CONFIG.bucketName}/${fileName}`;
+        return `https://crusher.blob.core.windows.net/${AZURE_CONFIG.containerName}/${fileName}`;
     }
 }
