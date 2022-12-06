@@ -216,7 +216,7 @@ const MiddleBar = () => {
 					`}
 				>
 					<a class="github-button" href="https://github.com/crusherdev/crusher" data-show-count="true" aria-label="Star crusherdev/crusher on GitHub" data-icon="octicon-star" data-size="large">
-						Star
+					⭐ Star
 					</a>
 				</div>
 				<a href="https://github.com/crusher-dev/crusher" target="_blank">

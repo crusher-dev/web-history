@@ -14,6 +14,9 @@ export const Footer = ()=>{
                <a href="https://docs.crusher.dev">
                     docs
                 </a>
+                <a href="https://   crusher.dev">
+                    crusher
+                </a>
                 <a href="https://github.com/crusherdev/crusher">
                     github
                 </a>

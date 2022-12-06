@@ -25,7 +25,9 @@ const SUBSCRIVE_CARD = ()=>{
 		<div css={cardCSS} className={" m-auto pb-36 md:mt-48 mt-64"}>
 			<div className="py-32 px-32 md:px-28 md:py-24">
 				<div className="text-15 font-800 mb-4">We’re tracking this website</div>
-				<div className="mb-24 text-12" css={css`color: #CBCBCB;`}>queue #210</div>
+				<div
+				title="this is fake, but we need to check for adult content before we start crawling."
+				className="mb-24 text-12" css={css`color: #CBCBCB;`}>queue #210</div>
 				<div className="flex mb-24" css={css`gap: 12px;`}>
 					<input css={inputCSS} placeholder="email"/> <Button type={"large"}>subscribe</Button>
 				</div>
@@ -46,7 +48,7 @@ const SUBSCRIVE_CARD = ()=>{
 					{label}
 				</div>
 				<div className="flex mb-24" css={css`gap: 12px;`}>
-					<a href="https://github.com/cruherdev/crusher"><Button type={"large"}>Star crusher</Button></a>
+					<a href="https://github.com/cruherdev/crusher"><Button type={"large"}>⭐ Star crusher</Button></a>
 					<a href="https://discord.com/invite/dHZkSNXQrg"><Button type={"large"}>Join discord</Button></a>
 
 				</div>
