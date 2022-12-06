@@ -7,7 +7,7 @@ import pixelmatch from "pixelmatch";
 
 // promisify
 import { promisify } from "util";
-import { clusteriseImages, convertPngToWebp, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
+import { clusteriseImages, compressPng, getDiffPercentage, httpsRequest, processImages, resizeImageToThumbnail } from "../utils";
 import { getWebArchiveRecords, getWebArchiveScreenshot, IWebArchiveRecord, WebArchive } from "./webArchive";
 import { Storage } from "./storage";
 import { WebHistoryDB } from "./db";
@@ -77,12 +77,14 @@ export class Crawler {
     async saveScreenshot(screenshot: Buffer, viewportScreenshot: Buffer, i: number) {
         const webSiteUrl = new URL(this.website);
         const directory = webSiteUrl.hostname;
-        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.webp`;
-        await Storage.upload(await convertPngToWebp(screenshot), filename);
+        const finalScreenshot = await compressPng(screenshot);
+        const filename = `${directory}/${this.webArchiveRecords[i].timestamp}.${finalScreenshot.type}`;
+        await Storage.upload(finalScreenshot.buffer, filename);
 
         const thumbnail = await resizeImageToThumbnail(viewportScreenshot);
-        const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.webp`;
-        await Storage.upload(await convertPngToWebp(thumbnail), thumbnailUrl);
+        const finalThumbnail = await compressPng(thumbnail);
+        const thumbnailUrl = `${directory}/${this.webArchiveRecords[i].timestamp}-thumbnail.${finalThumbnail.type}`;
+        await Storage.upload(finalThumbnail.buffer, thumbnailUrl);
 
         // Get date from yyyyMMdd
         const date = new Date(parseInt(this.webArchiveRecords[i].timestamp.slice(0, 4)), parseInt(this.webArchiveRecords[i].timestamp.slice(4, 6)), parseInt(this.webArchiveRecords[i].timestamp.slice(6, 8)));
