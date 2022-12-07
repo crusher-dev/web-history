@@ -58,7 +58,7 @@ export const SmallCard = ({ instanceInfo, index }) => {
 	);
 };
 
-const ZOOM_MODE = ({ isVisible, setZoom }) => {
+const ZOOM_MODE = ({ isVisible, setZoom, selectedIndex }) => {
 	useEffect(() => {
 		const handleScroll:any = (e:KeyboardEvent) => {
 			e.stopPropagation()
@@ -67,13 +67,13 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 			const scrollBox = document.querySelector("#scroll-box") as HTMLImageElement;
 			const currentImage  = document.querySelector("#current-image") as HTMLImageElement;
 
-			if (keyCode === 37) {
+			if (keyCode === 37 && scrollBox) {
 				scrollBox.scrollTo({
 					left: scrollBox.scrollLeft - currentImage.offsetWidth,
 					behavior: "smooth",
 				});
 			}
-			if (keyCode === 39) {
+			if (keyCode === 39 && scrollBox) {
 				scrollBox.scrollTo({
 					left: scrollBox.scrollLeft + currentImage.offsetWidth,
 					behavior: "smooth",
@@ -82,6 +82,19 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 		};
 		if(isVisible){
 			document.addEventListener("keydown", handleScroll);
+
+			setTimeout(() => {
+				const scrollBox = document.querySelector("#scroll-box") as HTMLImageElement;
+				const currentImage  = document.querySelectorAll("#current-image")[selectedIndex] as HTMLImageElement;
+				scrollBox.scrollLeft = scrollBox.scrollWidth;
+				if(scrollBox && currentImage){
+					scrollBox.scrollTo({
+						left: currentImage.offsetLeft,
+						behavior: "smooth",
+						
+					});
+				}
+			}, 100);
 		}else{
 			document.body.style.overflow = "normal";
 			document.removeEventListener("keydown", handleScroll);
@@ -155,8 +168,11 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 };
 
 const centerImage = css`
-	width: 775px;
-	height: 465px;
+	min-width: 775px;
+	max-width: 775px;
+	min-height: 465px;
+	max-height: 465px;
+	object-position: top;
 	border-radius: 29px;
 	object-fit: cover;
 	border: 10px solid rgba(255, 255, 255, 0.1);
@@ -188,7 +204,8 @@ export const WEBSITE_INFO = (): JSX.Element => {
 		const handleScroll:any = (e:KeyboardEvent) => {
 			e.stopPropagation()
 			const { keyCode } = e;
-			if(zoom) return
+			const zoom = document.querySelector("#scroll-box"); // Refers to the zoomed scroll box
+			if(zoom) { return; };
 
 			if (keyCode === 39) {
 				selectInstance(({current})=>{
@@ -315,7 +332,7 @@ export const WEBSITE_FULL_VIEW = () => {
 				border: 10px solid #ffffff4f;
 			}
 		`]}>
-			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
+			<ZOOM_MODE selectedIndex={selectedIndex} isVisible={showZoom} setZoom={setZoom} />
 			<motion.img src={getCdnFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
 	);
