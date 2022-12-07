@@ -25,8 +25,15 @@ export default Home;
 
 
 export async function getServerSideProps({ query }) {
-	const {data} = await WebHistoryDB.getSiteRecords();
-	
+	let {data} = await WebHistoryDB.getSiteRecords();
+	if(data?.length) {
+		data = await Promise.all(data.map((item) => {
+			return new Promise(async (resolve, reject) => {
+				let snapshotRes = await WebHistoryDB.getLatestSnapshotRecord(item.id);
+				resolve({...item, thumbnail_url: snapshotRes?.data?.[0]?.thumbnail_url || null});
+			});
+		}));
+	}
 	return { props: { list:{
 		popular: data
 	} } };

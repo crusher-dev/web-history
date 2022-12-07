@@ -6,6 +6,7 @@ import { CONTAINER_1234_24 } from "../../constants/style";
 import { motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { indexDataAtom } from "../../../pages";
+import { getCdnFile } from "../../utils";
 
 
 const SITES_SECTION = () => {
@@ -26,14 +27,14 @@ const SITES_SECTION = () => {
 };
 
 
-const SiteCard = ({item}: any)=>{
+const SiteCard = ({item}: any)=>{	
 	return (
 		<a href={`/${item.url}`}>
 			<motion.div  css={cardCSS}  whileHover={{
 			scale: 1.01,
 			transition: { duration: .15},
 		  }}>
-						<img src="/img/stripe.png" css={css`object-fit: cover`}/>
+						<img src={getCdnFile(item.thumbnail_url)} css={css`object-fit: cover`}/>
 						<div className="flex justify-between mt-16">
 						<span className="font-700 card-label">
 							{item.url}>

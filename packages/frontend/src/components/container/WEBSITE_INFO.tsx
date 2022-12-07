@@ -12,12 +12,11 @@ import { pageDataAtom, selectedInfoAtom } from "../../../pages/[website]";
 import { useRouter } from "next/router";
 import { KeyboardEvent } from "react";
 import { useCallback } from "react";
+import { getCdnFile } from "../../utils";
 
 const zoomAtom = atom(false);
 
-const getFile = (file_url) => {
-	return `https://web-history.crusher.dev/web-history/${file_url}`;
-};
+
 
 export const SmallCard = ({ instanceInfo, index }) => {
 	const { thumbnail_url, timestamp } = instanceInfo;
@@ -31,7 +30,7 @@ export const SmallCard = ({ instanceInfo, index }) => {
 
 	const Wrapper = useCallback(({children})=>{
 		if(typeof(window) !== 'undefined' && window.innerWidth < 600){
-			return <a href={getFile(thumbnail_url)} target="_blank">{children}</a>
+			return <a href={getCdnFile(thumbnail_url)} target="_blank">{children}</a>
 		}
 		return children;
 	},[])
@@ -50,7 +49,7 @@ export const SmallCard = ({ instanceInfo, index }) => {
 			}}
 			onClick={select.bind(this)}
 		>
-			<img src={getFile(thumbnail_url)} css={imageCSS} />
+			<img src={getCdnFile(thumbnail_url)} css={imageCSS} />
 			<div className="mt-12 md:mt-12">
 				{date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
 			</div>
@@ -90,7 +89,7 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 	}, [isVisible]);
 
 	useEffect(() => {
-		document.body.style.overflow = isVisible ? "hidden" : "scroll";
+		document.body.style.overflow = isVisible ? "hidden" : "auto";
 	}, [isVisible]);
 
 	const [data] = useAtom(pageDataAtom);
@@ -117,7 +116,7 @@ const ZOOM_MODE = ({ isVisible, setZoom }) => {
 							return (
 								<motion.img
 									onClick={select}
-									src={getFile(screenshot_url)}
+									src={getCdnFile(screenshot_url)}
 									initial={{ opacity: 0, y: 400 }}
 									animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
 									exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
@@ -177,7 +176,7 @@ const overlayCSS = css`
 	backdrop-filter: blur(20px);
 	gap: 32px;
 	padding: 0 80px;
-	overflow-x: scroll;
+	overflow-x: overlay;
 `;
 export const WEBSITE_INFO = (): JSX.Element => {
 	const [zoom, setZoom] = useAtom(zoomAtom);
@@ -269,7 +268,7 @@ export const WEBSITE_INFO = (): JSX.Element => {
 				className="mt-36 md:mt-32 flex md:flex-col-reverse md:pb-40"
 				css={css`
 					gap: 32px;
-					overflow-x: scroll;
+					overflow-x: auto;
 				`}
 			>
 				{data.map((instanceInfo, index) => {
@@ -317,7 +316,7 @@ export const WEBSITE_FULL_VIEW = () => {
 			}
 		`]}>
 			<ZOOM_MODE isVisible={showZoom} setZoom={setZoom} />
-			<motion.img src={getFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
+			<motion.img src={getCdnFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
 	);
 };

@@ -13,9 +13,8 @@ html {
 
 body {
 	font-size: 14rem;
-	min-width: 100vw;
 	color: white;
-	overflow: scroll;
+	overflow: auto;
 	background: #090909;
 }
 

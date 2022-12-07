@@ -38,6 +38,11 @@ export class WebHistoryDB {
 		return this.client.from("snapshots").select().eq("id", id);
 	}
 
+	static async getLatestSnapshotRecord(siteId: number): Promise<any> {
+		const res = await this.client.from("snapshots").select().eq("site_id", siteId).order("timestamp", { ascending: false }).limit(1);
+		return res;
+	}
+
 	static async getSiteSnapshots(siteUrl: string): Promise<any> {
 		const siteRecord = await WebHistoryDB.getSiteRecord(siteUrl);
 		if (!siteRecord.data?.length) return null;
