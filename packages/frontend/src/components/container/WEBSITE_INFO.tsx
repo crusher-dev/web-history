@@ -86,12 +86,11 @@ const ZOOM_MODE = ({ isVisible, setZoom, selectedIndex }) => {
 			setTimeout(() => {
 				const scrollBox = document.querySelector("#scroll-box") as HTMLImageElement;
 				const currentImage  = document.querySelectorAll("#current-image")[selectedIndex] as HTMLImageElement;
-				scrollBox.scrollLeft = scrollBox.scrollWidth;
+				scrollBox.scrollLeft = scrollBox.scrollWidth
 				if(scrollBox && currentImage){
 					scrollBox.scrollTo({
-						left: currentImage.offsetLeft,
+						left: currentImage.offsetLeft  - (window.innerWidth / 2) + (currentImage.offsetWidth/2),
 						behavior: "smooth",
-						
 					});
 				}
 			}, 100);
@@ -121,6 +120,7 @@ const ZOOM_MODE = ({ isVisible, setZoom, selectedIndex }) => {
 					id="scroll-box"
 				>
 					<>
+		
 						{data.map((instance, index) => {
 							const { screenshot_url } = instance;
 							const select = () => {
