@@ -60,7 +60,7 @@ export class WebArchive {
         const websiteUrl =  exactUrl ? website : new URL(website).hostname;
 
         const webArchiveCdxRes = JSON.parse(await httpsRequest(
-            `https://web.archive.org/cdx/search/cdx?url=${websiteUrl}&collapse=timestamp:6&showDupeCount=true&output=json${from ? `&from=${from}` : ""}${to ? `&to=${to}` : ""}${depth ? `&depth=${depth}` : ""}`,
+            `https://web.archive.org/cdx/search/cdx?url=${websiteUrl}&collapse=timestamp:6&showDupeCount=true&output=json${from ? `&from=${from}` : ""}${to ? `&to=${to}` : ""}`,
         ));
 
         const recordsArr = this.parseWebArchiveCDXResponse(webArchiveCdxRes);
@@ -78,13 +78,14 @@ export class WebArchive {
 
 
     async resolveRedirectRecords(records: Array<IWebArchiveRecord>): Promise<Array<IWebArchiveRecord>> {
-        const redirectRecords = records.filter((record) => record.statuscode === "302");
-        const nonRedirectRecords = records.filter((record) => record.statuscode !== "302");
+        const arrayWithIndex: Array<IWebArchiveRecord & {index: number}> = records.map((record, i) => ({...record, index: i}));
+        const redirectRecords = arrayWithIndex.filter((record) => record.statuscode === "302");
+        const nonRedirectRecords = arrayWithIndex.filter((record) => record.statuscode !== "302");
         
         let redirectSpecificRecords: Array<IWebArchiveRecord> = [];
         for(let i = 0; i < redirectRecords.length; i++) {
             const redirectRecord = redirectRecords[i];
-            const nextRecord = redirectRecords[i + 1];
+            const nextRecord = arrayWithIndex[redirectRecord.index + 1];
             const page = await this.browserContext.newPage();
             let pageRes =await page.goto(redirectRecord.wa_url, {timeout: 90 * 1000}).catch((err) => (null));
             const isWebArchiveRedirectPage = await page.$("text=Redirecting to..");
