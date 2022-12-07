@@ -21,6 +21,7 @@ export class Crawler {
     currentIndex: number = 0;
 
     _cacheMap: any = {};
+    _screenshotCache: any = {};
 
     constructor(private website: string){}
 
@@ -45,7 +46,7 @@ export class Crawler {
 
         const mid = Math.floor((left + right) / 2);
         
-        const [leftScreenshot, rightScreenshot] = await Promise.all([getWebArchiveScreenshot(records[left], this.browser!, this.browserContext!),  getWebArchiveScreenshot(records[right], this.browser!, this.browserContext!)]);
+        const [leftScreenshot, rightScreenshot] = await Promise.all([getWebArchiveScreenshot(records[left], this.browser!, this.browserContext!, this._screenshotCache),  getWebArchiveScreenshot(records[right], this.browser!, this.browserContext!, this._screenshotCache)]);
 
         const isDiff = await this.isNewScreenshot(leftScreenshot?.viewPortScreenshot!, rightScreenshot?.viewPortScreenshot!);
         if(isDiff.value) {

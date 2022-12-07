@@ -120,9 +120,7 @@ export class WebArchive {
     }
 }
 
-const cache: any = {};
-
-async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser, browserContext: BrowserContext): Promise<{fullPageScreenshot: Buffer; viewPortScreenshot: Buffer;} | null> {
+async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Browser, browserContext: BrowserContext, cache: any): Promise<{fullPageScreenshot: Buffer; viewPortScreenshot: Buffer;} | null> {
     console.time(`${record.timestamp}_screenshot`);
     let out = null;
     try {
@@ -138,11 +136,7 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
             // Wait for 302 redirect
             pageRes = await page.waitForNavigation({timeout: 95 * 1000, waitUntil: "networkidle" }).catch((err) => null);
         }
-        // Make sure status is not greater than 404
-        if(pageRes && pageRes?.status()! > 400) {
-            console.log(`Page ${record.wa_url} not found`);
-            return;
-        }
+
         // Remove web.archive.org banner
         await page.evaluate(() => {
             const banner = document.querySelector("#wm-ipp-base");
