@@ -131,12 +131,12 @@ async function getWebArchiveScreenshot(record: IWebArchiveRecord, browser: Brows
 
         const page = await browserContext.newPage();
         // Load wa_url in iframe
-        let pageRes =await page.goto(record.wa_url, {timeout: 90 * 1000}).catch((err) => (null));
+        let pageRes =await page.goto(record.wa_url, {timeout: 90 * 1000, waitUntil: "networkidle"}).catch((err) => (null));
 
         const isWebArchiveRedirectPage = await page.$("text=Redirecting to..");
         if (isWebArchiveRedirectPage) {
             // Wait for 302 redirect
-            pageRes = await page.waitForNavigation({timeout: 95 * 1000 }).catch((err) => null);
+            pageRes = await page.waitForNavigation({timeout: 95 * 1000, waitUntil: "networkidle" }).catch((err) => null);
         }
         // Make sure status is not greater than 404
         if(pageRes && pageRes?.status()! > 400) {
