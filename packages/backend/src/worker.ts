@@ -34,6 +34,7 @@ const redisClient = new Redis({
         },
         {
             connection: redisClient,
+            concurrency: 1
         }
     );
 })();
