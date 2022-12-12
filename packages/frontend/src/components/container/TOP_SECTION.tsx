@@ -108,13 +108,13 @@ const MENU = () => {
 			<a href="https://crusher.dev/website-history">
 				<div
 					id="logo"
-					className="font-source font-800 text-14"
+					className="flex items-center font-source font-800 text-14"
 					css={css`
 						color: #fff;
 						grid-area: logo;
 					`}
 				>
-					website history
+					<img src="/resources/logo-100.png" height={"28px"} width={"28px"}/><span className="ml-12 leading-none">website history</span>
 				</div>
 			</a>
 			<SEARCH_INPUT />
