@@ -25,7 +25,9 @@ export default Home;
 
 
 export async function getServerSideProps({ query }) {
-	let {data} = await WebHistoryDB.getSiteRecords();
+	let {data} = await WebHistoryDB.getFeaturesSites();
+	console.log("Ds",data)
+
 	if(data?.length) {
 		data = await Promise.all(data.map((item) => {
 			return new Promise(async (resolve, reject) => {
@@ -35,6 +37,6 @@ export async function getServerSideProps({ query }) {
 		}));
 	}
 	return { props: { list:{
-		popular: data
+		popular: !! data ? data : []
 	} } };
 }

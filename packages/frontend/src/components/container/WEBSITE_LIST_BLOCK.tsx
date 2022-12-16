@@ -19,7 +19,7 @@ export const WEBSITE_LIST_BLOCK = (): JSX.Element => {
 	return (
 		<div css={[CONTAINER_1234_24]}>
 			<div
-				className="flex justify-between pt-40 md:pt-24 md:flex-col md:mb-20"
+				className="flex flex-wrap justify-between pt-40 md:pt-24 md:flex-col md:mb-20"
 				css={css`
 					@media screen and (max-width: 680px) {
 						gap: 20px;
@@ -49,9 +49,9 @@ export const WEBSITE_LIST_BLOCK = (): JSX.Element => {
 				})}
 			</div>
 			<div
-				className="mt-60 md:mt-32 flex md:pb-40"
+				className="mt-60 md:mt-32 flex flex-wrap md:pb-40"
 				css={css`
-					gap: 80px;
+					gap: 60px;
 					overflow-x: scroll;
 				`}
 			>
@@ -59,7 +59,7 @@ export const WEBSITE_LIST_BLOCK = (): JSX.Element => {
 					return (
 
 					<a href={`../${url}`}>
-						<div>{url}</div>
+						<span css={css`letter-spacing: .4px;`}>{url}</span>
 					</a>
 
 					)

@@ -10,8 +10,18 @@ export class WebHistoryDB {
 		return this.client.from("sites").insert(payload);
 	}
 
-	static async getSiteRecords(): Promise<any> {
-		return this.client.from("sites").select();
+	static async getSiteRecords(character:string): Promise<any> {
+	
+		if(character === "all"){
+			return this.client.from("sites").select();
+		}
+		else{
+			return this.client.from("sites").select().ilike('url', `${character}%`);
+		}
+	}
+
+	static async getFeaturesSites(): Promise<any> {
+		return this.client.from("sites").select().eq("is_featured",true);
 	}
 
 	static async getSiteRecord(url: string): Promise<any> {

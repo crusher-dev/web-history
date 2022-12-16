@@ -26,7 +26,8 @@ const WebsitePage: NextPage = ({ sites }: any) => {
 };
 
 export async function getServerSideProps({ query }) {
-	const {data} = await WebHistoryDB.getSiteRecords();
+	const {character} = query;
+	const {data} = await WebHistoryDB.getSiteRecords(character);
 
 	return { props: { sites: data } };
 }
