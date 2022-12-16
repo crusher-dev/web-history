@@ -19,7 +19,7 @@ const zoomAtom = atom(false);
 
 
 export const SmallCard = ({ instanceInfo, index }) => {
-	const { thumbnail_url, timestamp } = instanceInfo;
+	const { thumbnail_url, timestamp,is_nsfw } = instanceInfo;
 	const [selectedInstance, selectInstance] = useAtom(selectedInfoAtom);
 
 	const select = () => {
@@ -30,10 +30,12 @@ export const SmallCard = ({ instanceInfo, index }) => {
 
 	const Wrapper = useCallback(({children})=>{
 		if(typeof(window) !== 'undefined' && window.innerWidth < 600){
-			return <a href={getCdnFile(thumbnail_url)} target="_blank">{children}</a>
+			return <a href={!!is_nsfw ? "/img/nsfw.jpg" : getCdnFile(thumbnail_url)} target="_blank">{children}</a>
 		}
 		return children;
 	},[])
+
+
 
 	return (
 		<Wrapper>
@@ -49,7 +51,7 @@ export const SmallCard = ({ instanceInfo, index }) => {
 			}}
 			onClick={select.bind(this)}
 		>
-			<img src={getCdnFile(thumbnail_url)} css={imageCSS} />
+			<img src={!!is_nsfw ? "/img/nsfw.jpg" :getCdnFile(thumbnail_url)} css={imageCSS} />
 			<div className="mt-12 md:mt-12">
 				{date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
 			</div>
@@ -122,14 +124,14 @@ const ZOOM_MODE = ({ isVisible, setZoom, selectedIndex }) => {
 					<>
 		
 						{data.map((instance, index) => {
-							const { screenshot_url } = instance;
+							const { screenshot_url,is_nsfw } = instance;
 							const select = () => {
 								selectInstance({ current: index });
 							};
 							return (
 								<motion.img
 									onClick={select}
-									src={getCdnFile(screenshot_url)}
+									src={!!is_nsfw ? "/img/nsfw.jpg": getCdnFile(screenshot_url)}
 									initial={{ opacity: 0, y: 400 }}
 									animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
 									exit={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
@@ -322,7 +324,7 @@ export const WEBSITE_FULL_VIEW = () => {
 	if (!data[selectedIndex]) {
 		return null;
 	}
-	const { screenshot_url } = data[selectedIndex];
+	const { screenshot_url,is_nsfw } = data[selectedIndex];
 	return (
 		<div className="mt-64 md:hidden" css={[CONTAINER_1234_24,css`
 			margin-top: 60px;
@@ -333,7 +335,7 @@ export const WEBSITE_FULL_VIEW = () => {
 			}
 		`]}>
 			<ZOOM_MODE selectedIndex={selectedIndex} isVisible={showZoom} setZoom={setZoom} />
-			<motion.img src={getCdnFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
+			<motion.img src={!!is_nsfw ? "/img/nsfw.jpg" :getCdnFile(screenshot_url)} initial={{ opacity: 0.6 }} animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }} />
 		</div>
 	);
 };
