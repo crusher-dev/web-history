@@ -20,6 +20,14 @@ export class WebHistoryDB {
 		}
 	}
 
+
+	static async getSiteRecordsForSearch(match:string): Promise<any> {
+
+
+			return this.client.from("sites").select().ilike('url', `%${match}%`);
+	
+	}
+
 	static async getFeaturesSites(): Promise<any> {
 		return this.client.from("sites").select().eq("is_featured",true);
 	}

@@ -1,9 +1,10 @@
 import { css } from "@emotion/react";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { CONTAINER_1234_24 } from "../../constants/style";
 import { GithubIcon, Logo, SearchIcon } from "../../constants/svg";
+import { WebHistoryDB } from "../../modules/supabase";
 
 const BLUR_LAYER = () => {
 	return (
@@ -50,6 +51,24 @@ const menuCSS = css`
 export const SEARCH_INPUT = () => {
 	const [showBar, setShow] = useState(false);
 	const [query,setQuery] = useState("")
+
+	const [data,setData] = useState([]);
+
+	useEffect(()=>{
+		
+		if(query.length<4){
+			setData([])
+			return;
+		}
+		const getData = async()=>{
+			const {data} = await WebHistoryDB.getSiteRecordsForSearch(query);
+			setData(data)
+		}
+		getData()
+	},[query]);
+
+	console.log(data)
+
 	return (
 		<div className="relative" css={inputContainer}>
 			<input
@@ -71,7 +90,9 @@ export const SEARCH_INPUT = () => {
 			/>
 			{showBar && (
 				<div className="absolute flex flex-col" css={suggestionBoxCSS}>
-					<div className="items text-12.5">Search for google.com</div>
+					{data.map(({url})=>{
+						return (<a href={`/${url}`}><div className="items text-12.5">Open {url}</div></a>)
+					})}
 					<a href={`/${query}`}>
 					<div className="items text-12.5">track {query}</div>
 					</a>
